@@ -51,7 +51,7 @@
         </q-item>
         <q-item>
           <q-item-section>
-            <q-btn class="bg-white btn" rounded @click="stopWatchPosition(getWatchID)">
+            <q-btn class="bg-white btn" rounded @click="stop()">
               <q-item-section class="text-center">
                 <q-item-label class="gray1 text-h5">S<span class="text-lowercase">top</span></q-item-label>
               </q-item-section>
@@ -103,12 +103,31 @@ export default {
     },
     watchPosition () {
       var that = this
+      var firstTime = true
 
       return new Promise((resolve, reject) => {
         var watchID = navigator.geolocation.watchPosition(
           function onWatchSuccess (position) {
             that.$q.loading.hide()
-
+            if (firstTime) {
+              that.$store.commit('conf/dialog', {
+                visible: true,
+                icon: 'mdi-shoe-print',
+                color: 'green',
+                textColor: 'white',
+                label: 'La task è attiva! Goditi la passeggiata!',
+                actions: [
+                  {
+                    label: 'Chiudi',
+                    color: 'green',
+                    action: () => {
+                      that.$store.commit('conf/dialog', {})
+                    }
+                  }
+                ]
+              })
+              firstTime = false
+            }
             that.setWatchID(watchID)
 
             let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
@@ -136,7 +155,25 @@ export default {
         )
       })
     },
-    stopWatchPosition
+    stop () {
+      stopWatchPosition(this.getWatchID)
+      this.$store.commit('conf/dialog', {
+        visible: true,
+        icon: 'mdi-clipboard-check-outline',
+        color: 'green',
+        textColor: 'white',
+        label: 'Task terminata! Corri nel tuo profilo per vedere quanti VYcoin hai guadagnato!',
+        actions: [
+          {
+            label: 'Chiudi',
+            color: 'green',
+            action: () => {
+              this.$store.commit('conf/dialog', {})
+            }
+          }
+        ]
+      })
+    }
   }
 }
 </script>

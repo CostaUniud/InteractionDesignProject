@@ -1,17 +1,23 @@
 <template>
   <div id="q-app">
     <router-view />
+    <bt-dialog :params="dialog" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { stopWatchPosition } from '@/utils/bt.js'
+import BtDialog from '@/components/BtDialog'
 
 export default {
   name: 'App',
+  components: {
+    BtDialog
+  },
   computed: {
     ...mapGetters({
+      'dialog': 'conf/dialog',
       'getWatchID': 'conf/getWatchID'
     })
   },

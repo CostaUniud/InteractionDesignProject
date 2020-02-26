@@ -22,7 +22,7 @@
                   />
                 </template>
               </q-input>
-              <q-btn outline rounded class="btn" label="Login!" @click="$router.push({ path: '/' })"/>
+              <q-btn rounded class="btn bg-white text-green text-weight-bold" label="Login" @click="$router.push({ path: '/' })"/>
             </q-item-section>
           </q-item>
           <q-item>
@@ -32,7 +32,7 @@
           </q-item>
           <q-item>
             <q-item-section class="bg-green q-mt-xl" style="width: 92.3vw">
-              <q-item-label class="text-weight-light" style="font-size: 1.5rem">Create Account</q-item-label>
+              <q-item-label class="text-weight-light" style="font-size: 1.5rem" @click="$router.push({ path: '/' })">Create Account</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>

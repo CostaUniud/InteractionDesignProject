@@ -8,7 +8,8 @@ const state = {
   distanzaPercorsa: null,
   foto: null,
   coin: null,
-  nome: null
+  nome: null,
+  dialog: {}
 }
 
 const getters = {
@@ -43,6 +44,10 @@ const getters = {
   getFotoProfilo (state) {
     // console.log('getFotoProfilo', LocalStorage.getItem('_foto'))
     return LocalStorage.getItem('_foto')
+  },
+  dialog (state) {
+    // console.log('getDialog ok', state)
+    return state.dialog
   }
 }
 
@@ -82,6 +87,10 @@ const mutations = {
     state.foto = value
     // console.log('setFoto', value)
     LocalStorage.set('_foto', value)
+  },
+  dialog (state, value) {
+    // console.log('setDialog > value', value)
+    state.dialog = value
   }
 }
 
