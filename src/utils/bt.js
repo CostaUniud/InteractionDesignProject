@@ -1,5 +1,4 @@
 import { Notify, LocalStorage } from 'quasar'
-import axios from 'axios'
 
 export function upperLowerCase (str) {
   if (!str) {
@@ -140,4 +139,5 @@ export function logout () {
   LocalStorage.remove('_foto')
   LocalStorage.remove('_nome')
   LocalStorage.remove('_coin')
+  LocalStorage.remove('_dist')
 }

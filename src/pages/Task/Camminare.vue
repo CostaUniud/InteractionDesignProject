@@ -32,10 +32,8 @@
               <q-item-section>
                 <q-item-label>Latitudine: {{ latitudine }}</q-item-label>
                 <q-item-label>Longitudine: {{ longitudine }}</q-item-label>
-                <!-- <q-item-label>StartPosition: {{ getStartPosition }}</q-item-label>
-                <q-item-label>EndPosition: {{ getEndPosition }}</q-item-label> -->
                 <q-item-label>Speed: {{ speed }}</q-item-label>
-                <q-item-label>DistanzaPercorsa: {{ getDistanzaPercorsa }}</q-item-label>
+                <q-item-label>DistanzaPercorsa: {{ !getDistanzaPercorsa ? 0 : Math.round(getDistanzaPercorsa * 100) / 100 }} km</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -91,35 +89,28 @@ export default {
     },
     watchPosition () {
       var that = this
-      // var count = 0
 
       return new Promise((resolve, reject) => {
         var watchID = navigator.geolocation.watchPosition(
           function onWatchSuccess (position) {
             that.$q.loading.hide()
+
             that.setWatchID(watchID)
-            // console.log('watchPosition', watchID)
-            // that.setStartPosition([that.latitudine, that.longitudine])
+
             let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
             let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
-            // count++
 
-            // console.log('count ' + count + ' speed ' + position.coords.speed)
-            // that.setCoin(that.getCoin + 0.1)
+            that.setDistanzaPercorsa(that.getDistanzaPercorsa + (that.speed * (1 / 3600)))
 
             if (updatedLatitude !== that.latitudine && updatedLongitude !== that.longitudine) {
               that.latitudine = updatedLatitude
               that.longitudine = updatedLongitude
-              // that.setEndPosition([updatedLatitude, updatedLongitude])
-              // console.log('dati per la distanza', that.getStartPosition[0] + ' ' + that.getStartPosition[1] + ' ' + that.getEndPosition[0] + ' ' + that.getEndPosition[1])
-              // that.setDistanzaPercorsa(that.getDistanzaPercorsa + getDistanceFromLatLonInKm(that.getStartPosition[0], that.getStartPosition[1], that.getEndPosition[0], that.getEndPosition[1]))
 
               that.speed = position.coords.speed * 3.6
-              // console.log('speed', that.speed)
+
               if (that.speed > 4 && that.speed < 10) {
-                console.log('give coin')
+                that.setDistanzaPercorsa(that.getDistanzaPercorsa + (that.speed * (1 / 3600)))
                 that.setCoin(that.getCoin + 0.1)
-                
               }
             }
             resolve(true)

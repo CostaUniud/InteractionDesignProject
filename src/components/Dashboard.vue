@@ -67,7 +67,7 @@
             <q-item-label class="text-white text-h5 text-weight-light" style="font-size: 1.3em">Footprint</q-item-label>
           </q-card-section>
           <q-card-section class="q-pb-xs text-center">
-            <q-item-label class="text-white text-h2 text-weight-bold">1.6T</q-item-label>
+            <q-item-label class="text-white text-h3 text-weight-bold">{{ !getDistanzaPercorsa ? 0 : (Math.round(getDistanzaPercorsa * 100) / 100) * 120 }} g</q-item-label>
           </q-card-section>
         </q-card>
       </q-item-section>
@@ -77,6 +77,7 @@
 
 <script>
 import Air from '@/components/charts/Air'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -85,6 +86,11 @@ export default {
   data () {
     return {
     }
+  },
+  computed: {
+    ...mapGetters({
+      'getDistanzaPercorsa': 'conf/getDistanzaPercorsa'
+    })
   }
 }
 </script>

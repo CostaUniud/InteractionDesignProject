@@ -60,7 +60,7 @@
               </q-item>
               <q-card-section horizontal>
                 <q-card-section class="q-pt-none">
-                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">1.6T</q-item-label>
+                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa ? 0 : (Math.round(getDistanzaPercorsa * 100) / 100) * 120 }} g</q-item-label>
                   <q-item-label class="text-green text-weight-bold" style="font-size: 1.2em">Good Job!</q-item-label>
                 </q-card-section>
                 <q-card-section class="q-pt-none">
@@ -165,7 +165,8 @@ export default {
       'setTab': 'conf/setTab',
       'setCoin': 'conf/setCoin',
       'setNome': 'conf/setNome',
-      'setFotoProfilo': 'conf/setFotoProfilo'
+      'setFotoProfilo': 'conf/setFotoProfilo',
+      'setDistanzaPercorsa': 'conf/setDistanzaPercorsa'
     }),
     // async filesSelected () {
     //   console.log(Uri.fromFile(new File('/' + this.foto[0].name)))
@@ -188,6 +189,7 @@ export default {
       this.setFotoProfilo(null)
       this.setNome(null)
       this.setCoin(0)
+      this.setDistanzaPercorsa(0)
       logout()
       this.$router.push({ path: '/login' })
     }

@@ -29,7 +29,7 @@ const getters = {
     return state.endPosition
   },
   getDistanzaPercorsa (state) {
-    // console.log('getDistanzaPercorsa', state.distanzaPercorsa)
+    console.log('getDistanzaPercorsa', state.distanzaPercorsa)
     return LocalStorage.getItem('_dist')
   },
   getCoin (state) {
@@ -64,7 +64,7 @@ const mutations = {
     state.endPosition = value
   },
   setDistanzaPercorsa (state, value) {
-    // console.log('setDistanzaPercorsa', value)
+    console.log('setDistanzaPercorsa', value)
     state.distanzaPercorsa = value
     LocalStorage.set('_dist', value)
   },

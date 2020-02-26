@@ -72,6 +72,6 @@ export default {
   border-radius: 20px
   margin-bottom: 10px
   max-width: 50vw
-  padding: 20px
+  padding: 20px 0px
   background-color: white
 </style>
