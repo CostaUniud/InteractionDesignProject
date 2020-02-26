@@ -92,24 +92,6 @@
             </q-card>
           </q-item-section>
         </q-item>
-        <!-- Reset coin -->
-        <!-- <q-item style="width: 100vw">
-          <q-item-section>
-            <q-card class="border-radius q-pa-md">
-              <q-btn
-                flat
-                dense
-                round
-                text-color="black"
-                label="Reset Coin"
-                icon="reset"
-                aria-label="Reset Coin"
-                @click="resetCoin()"
-                style="width: 80vw"
-              />
-            </q-card>
-          </q-item-section>
-        </q-item> -->
         <!-- Logout -->
         <q-item style="width: 100vw">
           <q-item-section>

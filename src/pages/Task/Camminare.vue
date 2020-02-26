@@ -26,23 +26,37 @@
         <div class="col-auto q-mt-xl">
           <q-list>
             <q-item>
-              Descrizione azione...
+              <q-item-section class="text-center">
+                <q-item-label class="gray1 text-body1">
+                  Hai intenzione di farti una bella camminata? Ottimo! Ne siamo felicissimi! Appena ti sei allacciato le scarpe e varcato la porta
+                  di casa premi il pulsante <span class="text-weight-bold">Inizia</span>! Guadagnerai VYcoin finché continuerai a camminare!
+                  In qualsiasi momento puoi premere <span class="text-weight-bold">Stop</span> per interrompere il task.
+                </q-item-label>
+              </q-item-section>
             </q-item>
             <q-item>
               <q-item-section>
-                <q-item-label>Latitudine: {{ latitudine }}</q-item-label>
-                <q-item-label>Longitudine: {{ longitudine }}</q-item-label>
-                <q-item-label>Speed: {{ speed }}</q-item-label>
-                <q-item-label>DistanzaPercorsa: {{ !getDistanzaPercorsa ? 0 : Math.round(getDistanzaPercorsa * 100) / 100 }} km</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </div>
         <q-item>
-          <q-btn rounded class="btn bg-white text-red text-h5" label="Inizia" @click="avvia()"/>
+          <q-item-section>
+            <q-btn class="bg-green btn inizia text-white" rounded @click="avvia()">
+              <q-item-section class="text-center">
+                <q-item-label class="text-h4 text-weight-bold">I<span class="text-lowercase">nizia</span></q-item-label>
+              </q-item-section>
+            </q-btn>
+          </q-item-section>
         </q-item>
         <q-item>
-          <q-btn rounded class="btn bg-white text-red text-h5" label="Stop" @click="stopWatchPosition(getWatchID)"/>
+          <q-item-section>
+            <q-btn class="bg-white btn" rounded @click="stopWatchPosition(getWatchID)">
+              <q-item-section class="text-center">
+                <q-item-label class="gray1 text-h5">S<span class="text-lowercase">top</span></q-item-label>
+              </q-item-section>
+            </q-btn>
+          </q-item-section>
         </q-item>
       </q-page>
     </q-page-container>
@@ -131,7 +145,9 @@ export default {
 .q-header
   box-shadow: 0px 10px 10px -10px rgba(0,0,0,0.1)
 .btn
-  border-radius: 35px
+  border-radius: 20px
   width: 90vw
-  height: 17vh
+  height: 100px
+.inizia
+  height: 120px
 </style>
