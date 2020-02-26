@@ -29,19 +29,19 @@ const getters = {
     return state.endPosition
   },
   getDistanzaPercorsa (state) {
-    console.log('getDistanzaPercorsa', state.distanzaPercorsa)
+    // console.log('getDistanzaPercorsa', LocalStorage.getItem('_dist'))
     return LocalStorage.getItem('_dist')
   },
   getCoin (state) {
-    console.log('getCoin', state.coin)
+    // console.log('getCoin', LocalStorage.getItem('_coin'))
     return LocalStorage.getItem('_coin')
   },
   getNome (state) {
-    // console.log('getNome', state.nome)
+    console.log('getNome', LocalStorage.getItem('_nome'))
     return LocalStorage.getItem('_nome')
   },
   getFotoProfilo (state) {
-    // console.log('getFotoProfilo', state.foto)
+    // console.log('getFotoProfilo', LocalStorage.getItem('_foto'))
     return LocalStorage.getItem('_foto')
   }
 }
@@ -64,23 +64,23 @@ const mutations = {
     state.endPosition = value
   },
   setDistanzaPercorsa (state, value) {
-    console.log('setDistanzaPercorsa', value)
     state.distanzaPercorsa = value
+    // console.log('setDistanzaPercorsa', value)
     LocalStorage.set('_dist', value)
   },
   setCoin (state, value) {
-    // console.log('setCoin', value)
     state.coin = value
+    // console.log('setCoin', value)
     LocalStorage.set('_coin', value)
   },
   setNome (state, value) {
-    // console.log('setNome', value)
     state.nome = value
+    console.log('setNome', value)
     LocalStorage.set('_nome', value)
   },
   setFotoProfilo (state, value) {
-    // console.log('setFoto', value)
     state.foto = value
+    // console.log('setFoto', value)
     LocalStorage.set('_foto', value)
   }
 }

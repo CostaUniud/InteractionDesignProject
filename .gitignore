@@ -36,3 +36,4 @@ yarn-error.log*
 # Keystore and build tools
 zipalign.exe
 my-release-key.keystore
+Vyca.apk

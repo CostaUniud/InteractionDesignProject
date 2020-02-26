@@ -133,6 +133,16 @@ export function removeLogin () {
   LocalStorage.remove('_login')
 }
 
+export function setNome (nome) {
+  console.log('setNome', nome)
+  LocalStorage.set('_nome', nome)
+}
+
+export function getNome () {
+  console.log('getNome', LocalStorage.getItem('_nome'))
+  return LocalStorage.getItem('_nome')
+}
+
 export function logout () {
   // removeLogin()
   stopWatchPosition()

@@ -20,7 +20,7 @@
         <q-item style="width: 100vw">
           <!-- Nome profilo -->
           <q-item-section>
-            <q-item-label class="text-green text-left text-weight-bold spezza" style="font-size: 1.9em">{{ getNome ? getNome : 'Francesco' }}</q-item-label>
+            <q-item-label class="text-green text-left text-weight-bold spezza" style="font-size: 1.9em">{{ getNome() ? getNome() : 'Francesco' }}</q-item-label>
           </q-item-section>
           <!-- Coin -->
           <q-item-section>
@@ -118,7 +118,7 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import Coin from '@/components/charts/Coin'
-import { getCameraImage, logout, stopWatchPosition } from '@/utils/bt.js'
+import { getCameraImage, logout, stopWatchPosition, getNome } from '@/utils/bt.js'
 
 export default {
   data () {
@@ -138,8 +138,7 @@ export default {
       'getWatchID': 'conf/getWatchID',
       'getDistanzaPercorsa': 'conf/getDistanzaPercorsa',
       'getFotoProfilo': 'conf/getFotoProfilo',
-      'getCoin': 'conf/getCoin',
-      'getNome': 'conf/getNome'
+      'getCoin': 'conf/getCoin'
     })
   },
   methods: {
@@ -150,6 +149,7 @@ export default {
       'setFotoProfilo': 'conf/setFotoProfilo',
       'setDistanzaPercorsa': 'conf/setDistanzaPercorsa'
     }),
+    getNome,
     // async filesSelected () {
     //   console.log(Uri.fromFile(new File('/' + this.foto[0].name)))
     //   const imgFileEntry = await getFileEntry(this.foto[0].name)
@@ -169,7 +169,6 @@ export default {
     myLogout () {
       stopWatchPosition(this.getWatchID)
       this.setFotoProfilo(null)
-      this.setNome(null)
       this.setCoin(0)
       this.setDistanzaPercorsa(0)
       logout()
