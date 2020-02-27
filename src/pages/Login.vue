@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { setNome } from '@/utils/bt.js'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -57,9 +58,9 @@ export default {
   },
   methods: {
     ...mapMutations({
-      'setTab': 'conf/setTab',
-      'setNome': 'conf/setNome'
-    })
+      'setTab': 'conf/setTab'
+    }),
+    setNome
   }
 }
 </script>

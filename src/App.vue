@@ -6,8 +6,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import BtDialog from '@/components/BtDialog'
+import { LocalStorage } from 'quasar'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'App',
@@ -24,8 +25,15 @@ export default {
       'dialog': 'conf/dialog'
     })
   },
+  methods: {
+    ...mapMutations({
+      'setFotoProfilo': 'conf/setFotoProfilo'
+    })
+  },
   mounted () {
     window.screen.orientation.lock('portrait')
+
+    this.setFotoProfilo(LocalStorage.getItem('_foto'))
 
     cordova.plugins.backgroundMode.on('activate', function () {
       console.log('entro in backgroundMode active')

@@ -142,7 +142,6 @@ export default {
   methods: {
     ...mapMutations({
       'setTab': 'conf/setTab',
-      'setNome': 'conf/setNome',
       'setFotoProfilo': 'conf/setFotoProfilo'
     }),
     getNome,

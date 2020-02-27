@@ -21,8 +21,8 @@ const getters = {
     return state.watchID
   },
   getFotoProfilo (state) {
-    // console.log('getFotoProfilo', LocalStorage.getItem('_foto'))
-    return LocalStorage.getItem('_foto')
+    console.log('getFotoProfilo')
+    return state.foto
   },
   dialog (state) {
     // console.log('getDialog ok', state)
@@ -40,8 +40,8 @@ const mutations = {
     state.watchID = value
   },
   setFotoProfilo (state, value) {
+    console.log('setFoto')
     state.foto = value
-    // console.log('setFoto', value)
     LocalStorage.set('_foto', value)
   },
   dialog (state, value) {
