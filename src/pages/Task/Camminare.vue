@@ -108,8 +108,13 @@ export default {
       return new Promise((resolve, reject) => {
         var watchID = navigator.geolocation.watchPosition(
           function onWatchSuccess (position) {
-            that.$q.loading.hide()
             if (firstTime) {
+              document.addEventListener('deviceready', function () {
+                cordova.plugins.backgroundMode.enable()
+              }, false)
+
+              that.$q.loading.hide()
+
               that.$store.commit('conf/dialog', {
                 visible: true,
                 icon: 'mdi-shoe-print',
@@ -157,6 +162,9 @@ export default {
     },
     stop () {
       stopWatchPosition(this.getWatchID)
+
+      cordova.plugins.backgroundMode.disable()
+
       this.$store.commit('conf/dialog', {
         visible: true,
         icon: 'mdi-clipboard-check-outline',

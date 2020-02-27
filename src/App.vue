@@ -7,25 +7,29 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { stopWatchPosition } from '@/utils/bt.js'
 import BtDialog from '@/components/BtDialog'
 
 export default {
   name: 'App',
+  data () {
+    return {
+      ciao: 'ciao'
+    }
+  },
   components: {
     BtDialog
   },
   computed: {
     ...mapGetters({
-      'dialog': 'conf/dialog',
-      'getWatchID': 'conf/getWatchID'
+      'dialog': 'conf/dialog'
     })
   },
   mounted () {
     window.screen.orientation.lock('portrait')
-  },
-  destroyed () {
-    stopWatchPosition()
+
+    cordova.plugins.backgroundMode.on('activate', function () {
+      cordova.plugins.backgroundMode.disableWebViewOptimizations()
+    })
   }
 }
 </script>

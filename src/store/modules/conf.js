@@ -89,7 +89,7 @@ const mutations = {
     LocalStorage.set('_foto', value)
   },
   dialog (state, value) {
-    // console.log('setDialog > value', value)
+    // console.log('setDialog', value)
     state.dialog = value
   }
 }
