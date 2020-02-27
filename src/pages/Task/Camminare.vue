@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { getCurrentPosition, stopWatchPosition } from '@/utils/bt.js'
+import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa } from '@/utils/bt.js'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -77,20 +77,12 @@ export default {
   },
   computed: {
     ...mapGetters({
-      'getWatchID': 'conf/getWatchID',
-      'getStartPosition': 'conf/getStartPosition',
-      'getEndPosition': 'conf/getEndPosition',
-      'getDistanzaPercorsa': 'conf/getDistanzaPercorsa',
-      'getCoin': 'conf/getCoin'
+      'getWatchID': 'conf/getWatchID'
     })
   },
   methods: {
     ...mapMutations({
-      'setWatchID': 'conf/setWatchID',
-      'setStartPosition': 'conf/setStartPosition',
-      'setEndPosition': 'conf/setEndPosition',
-      'setDistanzaPercorsa': 'conf/setDistanzaPercorsa',
-      'setCoin': 'conf/setCoin'
+      'setWatchID': 'conf/setWatchID'
     }),
     async avvia () {
       this.$q.loading.show({ message: 'Rivelando posizione...' })
@@ -111,6 +103,7 @@ export default {
             if (firstTime) {
               document.addEventListener('deviceready', function () {
                 cordova.plugins.backgroundMode.enable()
+                console.log('entro in deviceready')
               }, false)
 
               that.$q.loading.hide()
@@ -138,8 +131,6 @@ export default {
             let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
             let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
 
-            that.setDistanzaPercorsa(that.getDistanzaPercorsa + (that.speed * (1 / 3600)))
-
             if (updatedLatitude !== that.latitudine && updatedLongitude !== that.longitudine) {
               that.latitudine = updatedLatitude
               that.longitudine = updatedLongitude
@@ -147,8 +138,8 @@ export default {
               that.speed = position.coords.speed * 3.6
 
               if (that.speed > 4 && that.speed < 10) {
-                that.setDistanzaPercorsa(that.getDistanzaPercorsa + (that.speed * (1 / 3600)))
-                that.setCoin(that.getCoin + 0.1)
+                setDistanzaPercorsa(getDistanzaPercorsa() + (that.speed * (1 / 3600)))
+                setCoin(getCoin() + 0.1)
               }
             }
             resolve(true)

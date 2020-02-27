@@ -24,7 +24,7 @@
           </q-item-section>
           <!-- Coin -->
           <q-item-section>
-            <q-item-label class="text-yellow text-right text-weight-bold" style="font-size: 1.9em">{{ !getCoin ? 0 : Math.round(getCoin * 100) /100 }}</q-item-label>
+            <q-item-label class="text-yellow text-right text-weight-bold" style="font-size: 1.9em">{{ !getCoin() ? 0 : Math.round(getCoin() * 100) /100 }}</q-item-label>
           </q-item-section>
           <q-item-section avatar>
             <img src="@/assets/vycoin.png" style="height: 50px; max-width: 50px"/>
@@ -60,7 +60,7 @@
               </q-item>
               <q-card-section horizontal>
                 <q-card-section class="q-pt-none">
-                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa ? 0 : (Math.round(getDistanzaPercorsa * 100) / 100) * 120 }} g</q-item-label>
+                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa ? 0 : (Math.round(getDistanzaPercorsa() * 100) / 100) * 120 }} g</q-item-label>
                   <q-item-label class="text-green text-weight-bold" style="font-size: 1.2em">Good Job!</q-item-label>
                 </q-card-section>
                 <q-card-section class="q-pt-none">
@@ -74,7 +74,7 @@
             <q-card class="border-radius" style="height: 120px">
               <q-card-section>
                 <q-item-label class="gray1 text-h5 text-weight-light" style="font-size: 1.3em">Km percorsi</q-item-label>
-                <q-item-label class="text-green text-weight-bold text-center" style="font-size: 2em">{{ !getDistanzaPercorsa ? 0 : Math.round(getDistanzaPercorsa * 100) / 100 }} km</q-item-label>
+                <q-item-label class="text-green text-weight-bold text-center" style="font-size: 2em">{{ !getDistanzaPercorsa ? 0 : Math.round(getDistanzaPercorsa() * 100) / 100 }} km</q-item-label>
               </q-card-section>
             </q-card>
           </q-item-section>
@@ -116,9 +116,9 @@
 </template>
 
 <script>
+import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa } from '@/utils/bt.js'
 import { mapGetters, mapMutations } from 'vuex'
 import Coin from '@/components/charts/Coin'
-import { getCameraImage, logout, stopWatchPosition, getNome } from '@/utils/bt.js'
 
 export default {
   data () {
@@ -136,20 +136,18 @@ export default {
   computed: {
     ...mapGetters({
       'getWatchID': 'conf/getWatchID',
-      'getDistanzaPercorsa': 'conf/getDistanzaPercorsa',
-      'getFotoProfilo': 'conf/getFotoProfilo',
-      'getCoin': 'conf/getCoin'
+      'getFotoProfilo': 'conf/getFotoProfilo'
     })
   },
   methods: {
     ...mapMutations({
       'setTab': 'conf/setTab',
-      'setCoin': 'conf/setCoin',
       'setNome': 'conf/setNome',
-      'setFotoProfilo': 'conf/setFotoProfilo',
-      'setDistanzaPercorsa': 'conf/setDistanzaPercorsa'
+      'setFotoProfilo': 'conf/setFotoProfilo'
     }),
     getNome,
+    getCoin,
+    getDistanzaPercorsa,
     // async filesSelected () {
     //   console.log(Uri.fromFile(new File('/' + this.foto[0].name)))
     //   const imgFileEntry = await getFileEntry(this.foto[0].name)
@@ -169,8 +167,6 @@ export default {
     myLogout () {
       stopWatchPosition(this.getWatchID)
       this.setFotoProfilo(null)
-      this.setCoin(0)
-      this.setDistanzaPercorsa(0)
       logout()
       this.$router.push({ path: '/login' })
     }

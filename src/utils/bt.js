@@ -134,13 +134,33 @@ export function removeLogin () {
 }
 
 export function setNome (nome) {
-  console.log('setNome', nome)
+  // console.log('setNome', nome)
   LocalStorage.set('_nome', nome)
 }
 
 export function getNome () {
-  console.log('getNome', LocalStorage.getItem('_nome'))
+  // console.log('getNome', LocalStorage.getItem('_nome'))
   return LocalStorage.getItem('_nome')
+}
+
+export function setCoin (coin) {
+  console.log('setCoin', coin)
+  LocalStorage.set('_coin', coin)
+}
+
+export function getCoin () {
+  console.log('getCoin', LocalStorage.getItem('_coin'))
+  return LocalStorage.getItem('_coin')
+}
+
+export function setDistanzaPercorsa (dist) {
+  console.log('setDistanzaPercorsa', dist)
+  LocalStorage.set('_dist', dist)
+}
+
+export function getDistanzaPercorsa () {
+  console.log('getDistanzaPercorsa', LocalStorage.getItem('_dist'))
+  return LocalStorage.getItem('_dist')
 }
 
 export function logout () {

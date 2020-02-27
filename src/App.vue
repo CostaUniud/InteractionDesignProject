@@ -28,6 +28,7 @@ export default {
     window.screen.orientation.lock('portrait')
 
     cordova.plugins.backgroundMode.on('activate', function () {
+      console.log('entro in backgroundMode active')
       cordova.plugins.backgroundMode.disableWebViewOptimizations()
     })
   }
