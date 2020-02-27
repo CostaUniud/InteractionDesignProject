@@ -101,10 +101,7 @@ export default {
         var watchID = navigator.geolocation.watchPosition(
           function onWatchSuccess (position) {
             if (firstTime) {
-              document.addEventListener('deviceready', function () {
-                cordova.plugins.backgroundMode.enable()
-                console.log('entro in deviceready')
-              }, false)
+              cordova.plugins.backgroundMode.enable()
 
               that.$q.loading.hide()
 

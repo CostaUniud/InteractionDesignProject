@@ -3,11 +3,7 @@ import { LocalStorage } from 'quasar'
 const state = {
   tab: 'home',
   watchID: '',
-  startPosition: null,
-  endPosition: null,
-  distanzaPercorsa: null,
   foto: null,
-  nome: null,
   dialog: {}
 }
 
@@ -21,7 +17,7 @@ const getters = {
     return state.watchID
   },
   getFotoProfilo (state) {
-    console.log('getFotoProfilo')
+    // console.log('getFotoProfilo')
     return state.foto
   },
   dialog (state) {
@@ -40,7 +36,7 @@ const mutations = {
     state.watchID = value
   },
   setFotoProfilo (state, value) {
-    console.log('setFoto')
+    // console.log('setFoto')
     state.foto = value
     LocalStorage.set('_foto', value)
   },

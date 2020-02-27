@@ -2,15 +2,10 @@
   <div class="sfondo column">
     <!-- Foto profilo -->
     <div class="flex bg-green justify-center" style="height: 20vh">
-      <!-- <q-file v-if="!getFotoProfilo" @input="filesSelected" rounded outlined multiple accept=".jpg, image/*" v-model="foto" bg-color="white" max-files="1">
-        <template v-slot:prepend>
-          <q-icon name="mdi-image-plus" @click.stop />
-        </template>
-      </q-file> -->
-      <q-btn v-if="!getFotoProfilo" :ripple="false" round color="blue" size="40px" @click="takePhoto()" style="margin-top: 12vh">
-        <q-icon name="mdi-camera"/>
+      <q-btn v-if="!getFotoProfilo" :ripple="false" round color="blue" size="40px" @click="inserisciFoto()" style="margin-top: 12vh">
+        <q-icon name="mdi-account-box"/>
       </q-btn>
-      <q-avatar v-else size="120px" style="margin-top: 12vh" @click="takePhoto()">
+      <q-avatar v-else size="120px" style="margin-top: 12vh" @click="inserisciFoto()">
         <img :src="'data:image/png;base64,' + getFotoProfilo">
       </q-avatar>
     </div>
@@ -60,7 +55,7 @@
               </q-item>
               <q-card-section horizontal>
                 <q-card-section class="q-pt-none">
-                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa ? 0 : (Math.round(getDistanzaPercorsa() * 100) / 100) * 120 }} g</q-item-label>
+                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa() ? 0 : (Math.round(getDistanzaPercorsa() * 100) / 100) * 120 }} g</q-item-label>
                   <q-item-label class="text-green text-weight-bold" style="font-size: 1.2em">Good Job!</q-item-label>
                 </q-card-section>
                 <q-card-section class="q-pt-none">
@@ -74,7 +69,7 @@
             <q-card class="border-radius" style="height: 120px">
               <q-card-section>
                 <q-item-label class="gray1 text-h5 text-weight-light" style="font-size: 1.3em">Km percorsi</q-item-label>
-                <q-item-label class="text-green text-weight-bold text-center" style="font-size: 2em">{{ !getDistanzaPercorsa ? 0 : Math.round(getDistanzaPercorsa() * 100) / 100 }} km</q-item-label>
+                <q-item-label class="text-green text-weight-bold text-center" style="font-size: 2em">{{ !getDistanzaPercorsa() ? 0 : Math.round(getDistanzaPercorsa() * 100) / 100 }} km</q-item-label>
               </q-card-section>
             </q-card>
           </q-item-section>
@@ -112,19 +107,42 @@
         </q-item>
       </q-list>
     </div>
+
+    <q-dialog v-model="card">
+      <q-card style="width: 250px; border-radius: 20px">
+        <q-card-actions>
+          <q-item>
+            <q-item-section style="width: 100px">
+              <q-file style="height: 0px" borderless v-model="foto" @input="filesSelected" multiple accept=".jpg, image/*" max-files="1">
+                <template v-slot:prepend>
+                  <q-icon color="yellow" name="mdi-image-plus" @click.stop size="55px"/>
+                </template>
+              </q-file>
+            </q-item-section>
+            <q-item-section style="width: 100px">
+              <q-btn color="red" flat rounded icon="mdi-camera" size="35px" :ripple="false" @click="takePhoto()"/>
+            </q-item-section>
+          </q-item>
+          <q-item class="q-pt-none">
+            <q-item-label class="text-center gray1 text-body1 text-weight-bold">Scegli una foto o scattane una!</q-item-label>
+          </q-item>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
-import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa } from '@/utils/bt.js'
+import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64 } from '@/utils/bt.js'
 import { mapGetters, mapMutations } from 'vuex'
 import Coin from '@/components/charts/Coin'
 
 export default {
   data () {
     return {
-      coin: 0
-      // foto: null
+      coin: 0,
+      foto: null,
+      card: false
     }
   },
   components: {
@@ -147,17 +165,31 @@ export default {
     getNome,
     getCoin,
     getDistanzaPercorsa,
-    // async filesSelected () {
-    //   console.log(Uri.fromFile(new File('/' + this.foto[0].name)))
-    //   const imgFileEntry = await getFileEntry(this.foto[0].name)
-    //   const imgFile = await readFile(imgFileEntry)
-    //   const imgScr = await arrayBufferToBase64(imgFile)
-    //   this.setFotoProfilo(this.foto)
-    // },
+    inserisciFoto () {
+      this.card = true
+    },
+    async filesSelected () {
+      this.card = false
+      let file = await this.readFile(this.foto[0])
+      let imgScr = await arrayBufferToBase64(file)
+      this.setFotoProfilo(imgScr)
+      this.foto = null
+    },
+    readFile (file) {
+      let reader = new FileReader()
+
+      return new Promise((resolve, reject) => {
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.readAsArrayBuffer(file)
+      })
+    },
     async takePhoto () {
       await getCameraImage()
         .then(res => {
           this.setFotoProfilo(res)
+          this.card = false
         })
         .catch(error => {
           console.log('getCameraImage > error', error)
@@ -185,4 +217,8 @@ export default {
   color: white
 .qr
   height: 75px
+.q-file
+  position: relative
+  bottom: 47px
+  left: 20px
 </style>

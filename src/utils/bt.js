@@ -144,22 +144,22 @@ export function getNome () {
 }
 
 export function setCoin (coin) {
-  console.log('setCoin', coin)
+  // console.log('setCoin', coin)
   LocalStorage.set('_coin', coin)
 }
 
 export function getCoin () {
-  console.log('getCoin', LocalStorage.getItem('_coin'))
+  // console.log('getCoin', LocalStorage.getItem('_coin'))
   return LocalStorage.getItem('_coin')
 }
 
 export function setDistanzaPercorsa (dist) {
-  console.log('setDistanzaPercorsa', dist)
+  // console.log('setDistanzaPercorsa', dist)
   LocalStorage.set('_dist', dist)
 }
 
 export function getDistanzaPercorsa () {
-  console.log('getDistanzaPercorsa', LocalStorage.getItem('_dist'))
+  // console.log('getDistanzaPercorsa', LocalStorage.getItem('_dist'))
   return LocalStorage.getItem('_dist')
 }
 

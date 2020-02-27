@@ -8,7 +8,9 @@
       {{ params.label }}
 
       <template v-slot:action>
-        <q-btn v-for="(btn, index) in params.actions" :key="index" flat :color="btn.color" :label="btn.label" :icon="btn.icon" @click="btn.action()"/>
+        <q-btn-group outline>
+          <q-btn v-for="(btn, index) in params.actions" :key="index" flat :align="btn.align" :color="btn.color" :label="btn.label" :icon="btn.icon" @click="btn.action()"/>
+        </q-btn-group>
       </template>
     </q-banner>
   </q-dialog>
