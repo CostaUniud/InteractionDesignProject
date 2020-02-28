@@ -55,7 +55,7 @@
               </q-item>
               <q-card-section horizontal>
                 <q-card-section class="q-pt-none">
-                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa() ? 0 : (Math.round(getDistanzaPercorsa() * 100) / 100) * 120 }} g</q-item-label>
+                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa() ? 0 : (Math.round(getDistanzaPercorsa() * 120  * 100) / 100) }} g</q-item-label>
                   <q-item-label class="text-green text-weight-bold" style="font-size: 1.2em">Good Job!</q-item-label>
                 </q-card-section>
                 <q-card-section class="q-pt-none">

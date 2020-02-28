@@ -163,6 +163,26 @@ export function getDistanzaPercorsa () {
   return LocalStorage.getItem('_dist')
 }
 
+export function setCoinTask (coin) {
+  console.log('setCoinTask', coin)
+  LocalStorage.set('_coinTask', coin)
+}
+
+export function getCoinTask () {
+  console.log('getCoinTask', LocalStorage.getItem('_coinTask'))
+  return LocalStorage.getItem('_coinTask')
+}
+
+export function setDistanzaPercorsaTask (dist) {
+  console.log('setDistanzaPercorsaTask', dist)
+  LocalStorage.set('_distTask', dist)
+}
+
+export function getDistanzaPercorsaTask () {
+  console.log('getDistanzaPercorsaTask', LocalStorage.getItem('_distTask'))
+  return LocalStorage.getItem('_distTask')
+}
+
 export function logout () {
   // removeLogin()
   stopWatchPosition()

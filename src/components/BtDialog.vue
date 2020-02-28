@@ -5,7 +5,9 @@
         <q-avatar :icon="params.icon" :color="params.color" :text-color="params.textColor" />
       </template>
 
-      {{ params.label }}
+      <template>
+        <q-item-label :class="params.class">{{ params.label }}</q-item-label>
+      </template>
 
       <template v-slot:action>
         <q-btn-group outline>

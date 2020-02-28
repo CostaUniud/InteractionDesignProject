@@ -25,12 +25,14 @@
 
         <div class="col-auto q-mt-xl">
           <q-list>
-            <q-item>
+            <q-item class="q-pt-none">
               <q-item-section class="text-center">
                 <q-item-label class="gray1 text-body1">
-                  Hai intenzione di farti una bella camminata? Ottimo! Ne siamo felicissimi! Appena ti sei allacciato le scarpe e varcato la porta
-                  di casa premi il pulsante <span class="text-weight-bold">Inizia</span>! Guadagnerai VYcoin finché continuerai a camminare!
-                  In qualsiasi momento puoi premere <span class="text-weight-bold">Stop</span> per interrompere il task.
+                  Hai intenzione di farti una bella camminata? Ottimo!
+                  <br>Premi il pulsante <span class="text-weight-bold">Inizia</span>!
+                  <br>Guadagnerai VYcoin finché continuerai a camminare! In qualsiasi momento premi <span class="text-weight-bold">Stop</span> per terminare il task.
+                  <br><span class="text-weight-bold">Ricorda:</span> Vyca controllerà che tu stia camminando anche se spegni lo schermo o usi un'altra app, ma se la chiudi non potrà
+                  farlo e non guadagnerai VYcoin!
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -64,7 +66,8 @@
 </template>
 
 <script>
-import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa } from '@/utils/bt.js'
+import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa,
+  getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask } from '@/utils/bt.js'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -96,6 +99,8 @@ export default {
     watchPosition () {
       var that = this
       var firstTime = true
+      setDistanzaPercorsaTask(0)
+      setCoinTask(0)
 
       return new Promise((resolve, reject) => {
         var watchID = navigator.geolocation.watchPosition(
@@ -110,6 +115,7 @@ export default {
                 icon: 'mdi-shoe-print',
                 color: 'green',
                 textColor: 'white',
+                class: 'text-body1 gray1',
                 label: 'La task è attiva! Goditi la passeggiata!',
                 actions: [
                   {
@@ -135,7 +141,9 @@ export default {
               that.speed = position.coords.speed * 3.6
 
               if (that.speed > 4 && that.speed < 10) {
+                setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (that.speed * (1 / 3600)))
                 setDistanzaPercorsa(getDistanzaPercorsa() + (that.speed * (1 / 3600)))
+                setCoinTask(getCoinTask() + 0.1)
                 setCoin(getCoin() + 0.1)
               }
             }
@@ -153,22 +161,45 @@ export default {
 
       cordova.plugins.backgroundMode.disable()
 
-      this.$store.commit('conf/dialog', {
-        visible: true,
-        icon: 'mdi-clipboard-check-outline',
-        color: 'green',
-        textColor: 'white',
-        label: 'Task terminata! Corri nel tuo profilo per vedere quanti VYcoin hai guadagnato!',
-        actions: [
-          {
-            label: 'Chiudi',
-            color: 'green',
-            action: () => {
-              this.$store.commit('conf/dialog', {})
+      if (getDistanzaPercorsaTask() && getCoinTask()) {
+        this.$store.commit('conf/dialog', {
+          visible: true,
+          icon: 'mdi-clipboard-check-outline',
+          color: 'green',
+          textColor: 'white',
+          class: 'text-body1 gray1',
+          label: 'Bravo ' + (getNome() ? getNome() : 'Francesco') + '! Hai fatto ' + (Math.round(getDistanzaPercorsaTask() * 100) / 100) + 'km e hai guadagnato ' + (Math.round(getCoinTask() * 100) / 100) + ' VYcoin. L\'ambiente ti ringrazia!',
+          actions: [
+            {
+              label: 'Chiudi',
+              color: 'green',
+              action: () => {
+                this.$store.commit('conf/dialog', {})
+              }
             }
-          }
-        ]
-      })
+          ]
+        })
+        setDistanzaPercorsaTask(0)
+        setCoinTask(0)
+      } else {
+        this.$store.commit('conf/dialog', {
+          visible: true,
+          icon: 'mdi-emoticon-sad-outline',
+          color: 'yellow',
+          textColor: 'white',
+          class: 'text-body1 gray1',
+          label: 'Ci spiace, non hai guadagnato nessun VYcoin. Prova a premere Inizia e a camminare!',
+          actions: [
+            {
+              label: 'Chiudi',
+              color: 'green',
+              action: () => {
+                this.$store.commit('conf/dialog', {})
+              }
+            }
+          ]
+        })
+      }
     }
   }
 }

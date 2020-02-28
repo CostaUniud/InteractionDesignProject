@@ -67,7 +67,7 @@
             <q-item-label class="text-white text-h5 text-weight-light" style="font-size: 1.3em">Footprint</q-item-label>
           </q-card-section>
           <q-card-section class="q-pb-xs text-center">
-            <q-item-label class="text-white text-h3 text-weight-bold">{{ !getDistanzaPercorsa() ? 0 : (Math.round(getDistanzaPercorsa() * 100) / 100) * 120 }} g</q-item-label>
+            <q-item-label class="text-white text-h3 text-weight-bold">{{ !getDistanzaPercorsa() ? 0 : (Math.round(getDistanzaPercorsa() * 120  * 100) / 100) }} g</q-item-label>
           </q-card-section>
         </q-card>
       </q-item-section>
