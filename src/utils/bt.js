@@ -164,22 +164,22 @@ export function getDistanzaPercorsa () {
 }
 
 export function setCoinTask (coin) {
-  console.log('setCoinTask', coin)
+  // console.log('setCoinTask', coin)
   LocalStorage.set('_coinTask', coin)
 }
 
 export function getCoinTask () {
-  console.log('getCoinTask', LocalStorage.getItem('_coinTask'))
+  // console.log('getCoinTask', LocalStorage.getItem('_coinTask'))
   return LocalStorage.getItem('_coinTask')
 }
 
 export function setDistanzaPercorsaTask (dist) {
-  console.log('setDistanzaPercorsaTask', dist)
+  // console.log('setDistanzaPercorsaTask', dist)
   LocalStorage.set('_distTask', dist)
 }
 
 export function getDistanzaPercorsaTask () {
-  console.log('getDistanzaPercorsaTask', LocalStorage.getItem('_distTask'))
+  // console.log('getDistanzaPercorsaTask', LocalStorage.getItem('_distTask'))
   return LocalStorage.getItem('_distTask')
 }
 

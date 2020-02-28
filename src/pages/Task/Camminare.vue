@@ -165,7 +165,7 @@ export default {
         this.$store.commit('conf/dialog', {
           visible: true,
           icon: 'mdi-clipboard-check-outline',
-          color: 'green',
+          color: 'blue',
           textColor: 'white',
           class: 'text-body1 gray1',
           label: 'Bravo ' + (getNome() ? getNome() : 'Francesco') + '! Hai fatto ' + (Math.round(getDistanzaPercorsaTask() * 100) / 100) + 'km e hai guadagnato ' + (Math.round(getCoinTask() * 100) / 100) + ' VYcoin. L\'ambiente ti ringrazia!',

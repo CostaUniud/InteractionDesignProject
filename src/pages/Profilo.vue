@@ -5,7 +5,7 @@
       <q-btn v-if="!getFotoProfilo" :ripple="false" round color="blue" size="40px" @click="inserisciFoto()" style="margin-top: 12vh">
         <q-icon name="mdi-account-box"/>
       </q-btn>
-      <q-avatar v-else size="120px" style="margin-top: 12vh" @click="inserisciFoto()">
+      <q-avatar v-else class="shadow" size="120px" style="margin-top: 12vh;" @click="inserisciFoto()">
         <img :src="'data:image/png;base64,' + getFotoProfilo">
       </q-avatar>
     </div>
@@ -39,7 +39,7 @@
           </q-item-section>
           <!-- QR Code -->
           <q-item-section side>
-            <q-btn rounded class="qr bg-white gray text-h5 border-radius">
+            <q-btn rounded class="qr bg-white gray text-h5 border-radius" @click="nfc()">
               <img src="@/assets/lettura_qr.svg" style="height: 40px">
             </q-btn>
           </q-item-section>
@@ -84,6 +84,7 @@
               <q-card-section class="q-pt-none">
                 <Coin/>
               </q-card-section>
+              {{ tagContents }}
             </q-card>
           </q-item-section>
         </q-item>
@@ -142,7 +143,8 @@ export default {
     return {
       coin: 0,
       foto: null,
-      card: false
+      card: false,
+      tagContents: null
     }
   },
   components: {
@@ -200,6 +202,25 @@ export default {
       this.setFotoProfilo(null)
       logout()
       this.$router.push({ path: '/login' })
+    },
+    nfc () {
+      document.addEventListener('deviceready',
+        nfc.addNdefListener(function (nfcEvent) {
+          var tag = nfcEvent.tag
+
+          console.log(JSON.stringify(nfcEvent.tag))
+
+          this.tagContents = tag
+          navigator.notification.vibrate(100)
+        },
+        function () {
+          console.log('Listening for non-NDEF tags')
+        },
+        function (error) {
+          console.log('Error adding non-NDEF listener', JSON.stringify(error))
+        })
+        , false
+      )
     }
   }
 }
@@ -221,4 +242,6 @@ export default {
   position: relative
   bottom: 47px
   left: 20px
+.shadow
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2)
 </style>
