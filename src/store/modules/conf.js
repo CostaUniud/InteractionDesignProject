@@ -4,7 +4,8 @@ const state = {
   tab: 'home',
   watchID: '',
   foto: null,
-  dialog: {}
+  dialog: {},
+  scan: false
 }
 
 const getters = {
@@ -21,8 +22,12 @@ const getters = {
     return state.foto
   },
   dialog (state) {
-    // console.log('getDialog ok', state)
+    // console.log('getDialog', state.dialog)
     return state.dialog
+  },
+  getScan (state) {
+    // console.log('getScan', state.scan)
+    return state.scan
   }
 }
 
@@ -43,6 +48,10 @@ const mutations = {
   dialog (state, value) {
     // console.log('setDialog', value)
     state.dialog = value
+  },
+  setScan (state, value) {
+    // console.log('setScan', value)
+    state.scan = value
   }
 }
 

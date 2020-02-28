@@ -1,5 +1,5 @@
 <template>
-  <q-page id="main" class="sfondo">
+  <q-page id="main" class="sfondo" :class="getScan ? 'trasparente' : ''">
     <q-tab-panels v-model="tab" animated class="sfondo">
       <q-tab-panel name="azioni" class="q-pa-none">
         <Azioni/>
@@ -55,7 +55,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      'getTab': 'conf/getTab'
+      'getTab': 'conf/getTab',
+      'getScan': 'conf/getScan'
     })
   },
   methods: {

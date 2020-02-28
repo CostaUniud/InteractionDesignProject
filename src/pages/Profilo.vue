@@ -1,7 +1,7 @@
 <template>
-  <div class="sfondo column">
+  <div v-if="!getScan" class="column">
     <!-- Foto profilo -->
-    <div class="flex bg-green justify-center" style="height: 20vh">
+    <div class="flex bg-green justify-center trasparente" style="height: 20vh">
       <q-btn v-if="!getFotoProfilo" :ripple="false" round color="blue" size="40px" @click="inserisciFoto()" style="margin-top: 12vh">
         <q-icon name="mdi-account-box"/>
       </q-btn>
@@ -10,7 +10,7 @@
       </q-avatar>
     </div>
 
-    <div class="col-auto q-mt-xl">
+    <div class="col-auto q-mt-xl trasparente">
       <q-list class="q-gutter-xs row">
         <q-item style="width: 100vw">
           <!-- Nome profilo -->
@@ -39,7 +39,7 @@
           </q-item-section>
           <!-- QR Code -->
           <q-item-section side>
-            <q-btn rounded class="qr bg-white gray text-h5 border-radius" @click="nfc()">
+            <q-btn rounded class="qr bg-white gray text-h5 border-radius" @click="qrCode()">
               <img src="@/assets/lettura_qr.svg" style="height: 40px">
             </q-btn>
           </q-item-section>
@@ -156,13 +156,15 @@ export default {
   computed: {
     ...mapGetters({
       'getWatchID': 'conf/getWatchID',
-      'getFotoProfilo': 'conf/getFotoProfilo'
+      'getFotoProfilo': 'conf/getFotoProfilo',
+      'getScan': 'conf/getScan'
     })
   },
   methods: {
     ...mapMutations({
       'setTab': 'conf/setTab',
-      'setFotoProfilo': 'conf/setFotoProfilo'
+      'setFotoProfilo': 'conf/setFotoProfilo',
+      'setScan': 'conf/setScan'
     }),
     getNome,
     getCoin,
@@ -203,25 +205,80 @@ export default {
       logout()
       this.$router.push({ path: '/login' })
     },
-    nfc () {
-      document.addEventListener('deviceready',
-        nfc.addNdefListener(function (nfcEvent) {
-          var tag = nfcEvent.tag
-
-          console.log(JSON.stringify(nfcEvent.tag))
-
-          this.tagContents = tag
-          navigator.notification.vibrate(100)
-        },
-        function () {
-          console.log('Listening for non-NDEF tags')
-        },
-        function (error) {
-          console.log('Error adding non-NDEF listener', JSON.stringify(error))
+    async qrCode () {
+      // window.QRScanner.prepare(async function onDone (error, status) {
+      //   console.log('scanner pronto')
+      //   if (error) {
+      //     console.error(error)
+      //   }
+      //   if (status.authorized) {
+      //     console.log('autorizzato')
+      await this.scanQR()
+        .then(res => {
+          console.log(res)
+          window.QRScanner.destroy()
+          this.setScan(false)
+          this.$store.commit('conf/dialog', {
+            visible: true,
+            icon: 'mdi-qrcode-scan',
+            color: 'blue',
+            textColor: 'white',
+            class: 'text-body1 gray1',
+            label: 'Scannerrizzazione riuscita! Ecco il tuo risultato: ' + res,
+            actions: [
+              {
+                label: 'Chiudi',
+                color: 'green',
+                action: () => {
+                  this.$store.commit('conf/dialog', {})
+                }
+              }
+            ]
+          })
         })
-        , false
-      )
+        .catch(error => {
+          console.log('scanQR', error)
+        })
+
+      //   } else if (status.denied) {
+      //   } else {
+      //   }
+      // })
+    },
+    async scanQR () {
+      this.setScan(true)
+      window.QRScanner.show()
+      return new Promise((resolve, reject) => {
+        window.QRScanner.scan(
+          async function displayContents (err, text) {
+            if (err) {
+              reject(err)
+            } else {
+              console.log('entro?')
+              resolve(text)
+            }
+          })
+      })
     }
+    // nfc () {
+    //   document.addEventListener('deviceready',
+    //     nfc.addNdefListener(function (nfcEvent) {
+    //       var tag = nfcEvent.tag
+
+    //       console.log(JSON.stringify(nfcEvent.tag))
+
+    //       this.tagContents = tag
+    //       navigator.notification.vibrate(100)
+    //     },
+    //     function () {
+    //       console.log('Listening for non-NDEF tags')
+    //     },
+    //     function (error) {
+    //       console.log('Error adding non-NDEF listener', JSON.stringify(error))
+    //     })
+    //     , false
+    //   )
+    // }
   }
 }
 </script>

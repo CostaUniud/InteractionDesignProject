@@ -1,7 +1,8 @@
 <template>
-  <div id="q-app">
+  <div id="q-app" class="sfondo" :class="getScan ? 'trasparente' : ''">
     <router-view />
     <bt-dialog :params="dialog" />
+    <img v-if="getScan" src="@/assets/qr_region.png" id="qr_region">
   </div>
 </template>
 
@@ -22,7 +23,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      'dialog': 'conf/dialog'
+      'dialog': 'conf/dialog',
+      'getScan': 'conf/getScan'
     })
   },
   methods: {
@@ -59,6 +61,14 @@ export default {
   text-overflow: ellipsis
   white-space: nowrap
   overflow: hidden
+.trasparente
+  background-color: transparent
+#qr_region
+  position: absolute
+  width: 80vw
+  height: 80vw
+  top: calc(50vh - 40vw - 33px)
+  left: 10vw
 // .poppins
 //   font-family: 'Poppins'
 // .yellow
