@@ -7,33 +7,33 @@ const state = {
 
 const getters = {
   getAzioni (state) {
-    console.log('getAzioni', state.azioni)
+    // console.log('getAzioni', state.azioni)
     return state.azioni
   }
 }
 
 const mutations = {
   setAzioni (state, payload) {
-    console.log('setAzioni', payload)
+    // console.log('setAzioni', payload)
     state.azioni = payload
   }
 }
 
 const actions = {
-  salvaAzione (context, coin, tipo, task) {
+  salvaAzione (context, payload) {
     return new Promise((resolve, reject) => {
       store.dispatch('db/open')
         .then(db => {
           db.transaction(function (tx) {
-            // tx.executeSql('DELETE FROM azione', [])
+            tx.executeSql('DELETE FROM azione', [])
+            // tx.executeSql('DROP TABLE IF EXISTS azione')
             tx.executeSql(
               `CREATE TABLE IF NOT EXISTS azione(
-                id_azione INTEGER NOT NULL,
-                coin VARCHAR(1) TEXT NOT NULL,
-                data TEXT NOT NULL,
-                tipo TEXT NOT NULL,
-                task TEXT NOT NULL,
-                PRIMARY KEY (id_azione)
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                coin REAL NOT NULL, 
+                data TEXT NOT NULL, 
+                tipo TEXT NOT NULL, 
+                task TEXT NOT NULL
               )`
             )
             let date = new Date()
@@ -45,10 +45,10 @@ const actions = {
                 task
               ) VALUES ( ?, ?, ?, ? )`,
               [
-                coin,
+                payload.coin,
                 formatDate(date),
-                tipo,
-                task
+                payload.tipo,
+                payload.task
               ]
             )
             resolve(insert)
@@ -71,12 +71,12 @@ const actions = {
             tx.executeSql(
               `SELECT * 
               FROM azione
-              ORDER BY id_azione DESC`,
+              ORDER BY id DESC`,
               [],
               function (tx, resultSet) {
                 let response = []
                 for (let r = 0; r < resultSet.rows.length; r++) {
-                  resultSet.rows.item(r).azione = JSON.parse(resultSet.rows.item(r).azione)
+                  // console.log('ottini afeonjefa', resultSet.rows.item(r))
                   response.push(resultSet.rows.item(r))
                 }
                 context.commit('setAzioni', response)
@@ -88,7 +88,7 @@ const actions = {
           }, function (error) {
             reject(error)
           }, function () {
-            console.log('ottieniAzioni transaction ok')
+            // console.log('ottieniAzioni transaction ok')
           })
         })
         .catch(error => {

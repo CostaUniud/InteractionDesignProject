@@ -44,7 +44,7 @@ const routes = [
     component: Shop
   },
   {
-    path: '/task1',
+    path: '/walk',
     component: Camminare
   }
 ]

@@ -133,8 +133,14 @@ export default {
             let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
             let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
             let speed = position.coords.speed * 3.6
-
+            // let speed = 10
             count++
+
+            // setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
+            // setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
+            // let coinTaskOld = getCoinTask()
+            // setCoinTask(10 * getDistanzaPercorsaTask())
+            // setCoin(getCoin() + getCoinTask() - coinTaskOld)
 
             if (updatedLatitude !== that.latitudine || updatedLongitude !== that.longitudine) {
               that.latitudine = updatedLatitude
@@ -163,10 +169,35 @@ export default {
 
       cordova.plugins.backgroundMode.disable()
 
+      var payload = {
+        coin: Math.round(getCoinTask() * 100) / 100,
+        tipo: 'aria',
+        task: 'walk'
+      }
+
       if (getDistanzaPercorsaTask() !== 0 && getCoinTask() !== 0) {
-        await this.salvaAzione(getCoinTask(), 'Aria', 'Walk')
+        await this.salvaAzione(payload)
           .then(res => {
             this.$q.loading.hide()
+            this.$store.commit('conf/dialog', {
+              visible: true,
+              icon: 'mdi-clipboard-check-outline',
+              color: 'blue',
+              textColor: 'white',
+              class: 'text-body1 gray1',
+              label: 'Bravo ' + (getNome() ? getNome() : 'Francesco') + '! Hai fatto ' + (Math.round(getDistanzaPercorsaTask() * 100) / 100) + 'km e hai guadagnato ' + (Math.round(getCoinTask() * 100) / 100) + ' VYcoin. L\'ambiente ti ringrazia!',
+              actions: [
+                {
+                  label: 'Chiudi',
+                  color: 'green',
+                  action: () => {
+                    this.$store.commit('conf/dialog', {})
+                  }
+                }
+              ]
+            })
+            setDistanzaPercorsaTask(0)
+            setCoinTask(0)
           })
           .catch(error => {
             console.log('salvaAzione > error', error)
@@ -177,26 +208,6 @@ export default {
               icon: 'warning'
             })
           })
-
-        this.$store.commit('conf/dialog', {
-          visible: true,
-          icon: 'mdi-clipboard-check-outline',
-          color: 'blue',
-          textColor: 'white',
-          class: 'text-body1 gray1',
-          label: 'Bravo ' + (getNome() ? getNome() : 'Francesco') + '! Hai fatto ' + (Math.round(getDistanzaPercorsaTask() * 100) / 100) + 'km e hai guadagnato ' + (Math.round(getCoinTask() * 100) / 100) + ' VYcoin. L\'ambiente ti ringrazia!',
-          actions: [
-            {
-              label: 'Chiudi',
-              color: 'green',
-              action: () => {
-                this.$store.commit('conf/dialog', {})
-              }
-            }
-          ]
-        })
-        setDistanzaPercorsaTask(0)
-        setCoinTask(0)
       } else {
         this.$store.commit('conf/dialog', {
           visible: true,

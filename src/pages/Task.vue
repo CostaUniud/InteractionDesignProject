@@ -26,7 +26,7 @@
         <div class="col-auto q-mt-xl">
           <q-list class="row justify-center full-height full-width text-center">
             <q-item>
-              <q-btn class="btn gray1" size="3em" icon="mdi-shoe-print" rounded stack @click="$router.push({ path: '/task1' })">
+              <q-btn class="btn gray1" size="3em" icon="mdi-shoe-print" rounded stack @click="$router.push({ path: '/walk' })">
                 <q-item-section>
                   <q-item-label class="text-h4 text-weight-bold blue">W<span class="text-lowercase">alk</span></q-item-label>
                   <q-item-label class="text-caption">C<span class="text-lowercase">oncediti una passeggiata</span></q-item-label>
