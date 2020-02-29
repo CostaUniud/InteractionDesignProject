@@ -70,6 +70,7 @@
 import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa,
   getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask } from '@/utils/bt.js'
 import { mapGetters, mapMutations } from 'vuex'
+// import { date } from 'quasar'
 
 export default {
   data () {
@@ -91,18 +92,18 @@ export default {
       'setWatchID': 'conf/setWatchID'
     }),
     async avvia () {
-      this.$q.loading.show({ message: 'Rivelando posizione...' })
+      this.$q.loading.show({ message: 'Rilevando posizione...' })
       let position = await getCurrentPosition()
 
-      this.latitude = Math.round(position.coords.latitude * 10000) / 10000
-      this.longitudine = Math.round(position.coords.longitudine * 10000) / 10000
+      this.latitude = Math.round(position.coords.latitude * 100000) / 100000
+      this.longitudine = Math.round(position.coords.longitudine * 100000) / 100000
 
       this.watchPosition()
     },
     watchPosition () {
       var that = this
       var firstTime = true
-      // var count = 0
+      var count = 0
       setDistanzaPercorsaTask(0)
       setCoinTask(0)
 
@@ -135,24 +136,38 @@ export default {
             }
             that.setWatchID(watchID)
 
-            that.updatedLatitude = Math.round(position.coords.latitude * 10000) / 10000
-            that.updatedLongitude = Math.round(position.coords.longitude * 10000) / 10000
-            console.log('vecchie: lan: ' + that.latitudine + ' log: ' + that.longitudine)
-            console.log('nuove: lan: ' + that.updatedLatitude + ' log: ' + that.updatedLongitude)
-            if (that.updatedLatitude !== that.latitudine && that.updatedLongitude !== that.longitudine) {
+            that.updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
+            that.updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
+            // console.log('vecchie: lan: ' + that.latitudine + ' log: ' + that.longitudine)
+            // console.log('nuove: lan: ' + that.updatedLatitude + ' log: ' + that.updatedLongitude)
+
+            // let formattedString = date.formatDate(position.timestamp, 'HH:mm:ss.SSS')
+            // console.log(formattedString)
+            that.speed = position.coords.speed * 3.6
+            // console.log(that.speed)
+            // that.speed = 10
+
+            count++
+            // console.log(count)
+
+            // setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (that.speed * (1 / 3600)))
+            // console.log('km:', getDistanzaPercorsaTask())
+            // let coinTaskOld = getCoinTask()
+            // setCoinTask(10 * getDistanzaPercorsaTask())
+            // console.log('coin task:', getCoinTask())
+            // setCoin(getCoin() + getCoinTask() - coinTaskOld)
+            // console.log('coin:', getCoin())
+
+            if (that.updatedLatitude !== that.latitudine || that.updatedLongitude !== that.longitudine) {
               that.latitudine = that.updatedLatitude
               that.longitudine = that.updatedLongitude
 
-              that.speed = position.coords.speed * 3.6
-              console.log(that.speed)
-              // count++
-              // console.log(count)
-
-              if (that.speed > 4 && that.speed < 10) { // && count > 20
+              if (that.speed > 4 && that.speed < 10 && count > 60) {
                 setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (that.speed * (1 / 3600)))
                 setDistanzaPercorsa(getDistanzaPercorsa() + (that.speed * (1 / 3600)))
-                setCoinTask(getCoinTask() + 0.1)
-                setCoin(getCoin() + 0.1)
+                let coinTaskOld = getCoinTask()
+                setCoinTask(10 * getDistanzaPercorsaTask())
+                setCoin(getCoin() + getCoinTask() - coinTaskOld)
               }
             }
             resolve(true)
@@ -169,7 +184,7 @@ export default {
 
       cordova.plugins.backgroundMode.disable()
 
-      if (getDistanzaPercorsaTask() && getCoinTask()) {
+      if (getDistanzaPercorsaTask() !== 0 && getCoinTask() !== 0) {
         this.$store.commit('conf/dialog', {
           visible: true,
           icon: 'mdi-clipboard-check-outline',
