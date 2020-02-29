@@ -34,11 +34,6 @@
                   <br><span class="text-weight-bold">Ricorda:</span> Vyca controllerà che tu stia camminando anche se spegni lo schermo o usi un'altra app, ma se la chiudi non potrà
                   farlo e non guadagnerai VYcoin!
                 </q-item-label>
-                <q-item-label class="q-pt-xs">
-                  Vechie coord: Lat: {{ latitudine }} Long: {{ longitudine }}
-                  <br/>Nuove coord: Lat: {{ updatedLatitude }} Long: {{ updatedLongitude }}
-                  <br/>Speed: {{ speed }}
-                </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -69,17 +64,13 @@
 <script>
 import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa,
   getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask } from '@/utils/bt.js'
-import { mapGetters, mapMutations } from 'vuex'
-// import { date } from 'quasar'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
       latitudine: 0,
-      longitudine: 0,
-      speed: 0,
-      updatedLatitude: 0,
-      updatedLongitude: 0
+      longitudine: 0
     }
   },
   computed: {
@@ -90,6 +81,9 @@ export default {
   methods: {
     ...mapMutations({
       'setWatchID': 'conf/setWatchID'
+    }),
+    ...mapActions({
+      'salvaAzione': 'azioni/salvaAzione'
     }),
     async avvia () {
       this.$q.loading.show({ message: 'Rilevando posizione...' })
@@ -136,35 +130,19 @@ export default {
             }
             that.setWatchID(watchID)
 
-            that.updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
-            that.updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
-            // console.log('vecchie: lan: ' + that.latitudine + ' log: ' + that.longitudine)
-            // console.log('nuove: lan: ' + that.updatedLatitude + ' log: ' + that.updatedLongitude)
-
-            // let formattedString = date.formatDate(position.timestamp, 'HH:mm:ss.SSS')
-            // console.log(formattedString)
-            that.speed = position.coords.speed * 3.6
-            // console.log(that.speed)
-            // that.speed = 10
+            let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
+            let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
+            let speed = position.coords.speed * 3.6
 
             count++
-            // console.log(count)
 
-            // setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (that.speed * (1 / 3600)))
-            // console.log('km:', getDistanzaPercorsaTask())
-            // let coinTaskOld = getCoinTask()
-            // setCoinTask(10 * getDistanzaPercorsaTask())
-            // console.log('coin task:', getCoinTask())
-            // setCoin(getCoin() + getCoinTask() - coinTaskOld)
-            // console.log('coin:', getCoin())
+            if (updatedLatitude !== that.latitudine || updatedLongitude !== that.longitudine) {
+              that.latitudine = updatedLatitude
+              that.longitudine = updatedLongitude
 
-            if (that.updatedLatitude !== that.latitudine || that.updatedLongitude !== that.longitudine) {
-              that.latitudine = that.updatedLatitude
-              that.longitudine = that.updatedLongitude
-
-              if (that.speed > 4 && that.speed < 10 && count > 60) {
-                setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (that.speed * (1 / 3600)))
-                setDistanzaPercorsa(getDistanzaPercorsa() + (that.speed * (1 / 3600)))
+              if (speed > 4 && speed < 10 && count > 60) {
+                setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
+                setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
                 let coinTaskOld = getCoinTask()
                 setCoinTask(10 * getDistanzaPercorsaTask())
                 setCoin(getCoin() + getCoinTask() - coinTaskOld)
@@ -179,12 +157,27 @@ export default {
         )
       })
     },
-    stop () {
+    async stop () {
+      this.$q.loading.show({ message: 'Salvando azione...' })
       stopWatchPosition(this.getWatchID)
 
       cordova.plugins.backgroundMode.disable()
 
       if (getDistanzaPercorsaTask() !== 0 && getCoinTask() !== 0) {
+        await this.salvaAzione(getCoinTask(), 'Aria', 'Walk')
+          .then(res => {
+            this.$q.loading.hide()
+          })
+          .catch(error => {
+            console.log('salvaAzione > error', error)
+            this.$q.loading.hide()
+            this.$q.notify({
+              color: 'negative',
+              message: 'Azione non salvata',
+              icon: 'warning'
+            })
+          })
+
         this.$store.commit('conf/dialog', {
           visible: true,
           icon: 'mdi-clipboard-check-outline',
@@ -223,11 +216,6 @@ export default {
           ]
         })
       }
-      this.latitudine = 0
-      this.longitudine = 0
-      this.speed = 0
-      this.updatedLatitude = 0
-      this.updatedLongitude = 0
     }
   }
 }

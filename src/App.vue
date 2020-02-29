@@ -12,7 +12,7 @@
 <script>
 import BtDialog from '@/components/BtDialog'
 import { LocalStorage } from 'quasar'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -26,9 +26,16 @@ export default {
   components: {
     BtDialog
   },
+  async beforeMount () {
+    await this.startDb()
+  },
+  beforeDestroy () {
+    this.getDb.close()
+  },
   computed: {
     ...mapGetters({
       'dialog': 'conf/dialog',
+      'getDb': 'db/getDb',
       'getScan': 'conf/getScan'
     })
   },
@@ -36,6 +43,9 @@ export default {
     ...mapMutations({
       'setFotoProfilo': 'conf/setFotoProfilo',
       'setScan': 'conf/setScan'
+    }),
+    ...mapActions({
+      'startDb': 'db/start'
     }),
     turnOnLight () {
       if (!this.light) {

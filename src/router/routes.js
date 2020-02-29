@@ -1,9 +1,10 @@
 import Intro from '@/pages/Intro'
 import Login from '@/pages/Login'
-import Wallet from '@/pages/Wallet'
+import Acquisti from '@/pages/Acquisti'
 import Task from '@/pages/Task'
 import Eventi from '@/pages/Eventi'
 import Shop from '@/pages/Shop'
+import Wallet from '@/pages/Wallet'
 import Camminare from '@/pages/task/Camminare'
 
 const routes = [
@@ -25,6 +26,10 @@ const routes = [
   {
     path: '/wallet',
     component: Wallet
+  },
+  {
+    path: '/acquisti',
+    component: Acquisti
   },
   {
     path: '/task',

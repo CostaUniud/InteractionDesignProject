@@ -1,5 +1,17 @@
 import { LocalStorage } from 'quasar'
 
+export function formatDate (d) {
+  let dd = d.getDate()
+  let mm = d.getMonth() + 1
+  let yyyy = d.getFullYear()
+
+  return [
+    (dd > 9 ? '' : '0') + dd,
+    (mm > 9 ? '' : '0') + mm,
+    yyyy
+  ].join('/')
+}
+
 export function upperLowerCase (str) {
   if (!str) {
     return

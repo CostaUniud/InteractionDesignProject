@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import aria from './modules/aria'
 import conf from './modules/conf'
+import db from './modules/db'
+import azioni from './modules/azioni'
 
 Vue.use(Vuex)
 
@@ -14,17 +16,15 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    modules: {
-      aria,
-      conf
-    },
+export default new Vuex.Store({
+  modules: {
+    aria,
+    conf,
+    db,
+    azioni
+  },
 
-    // enable strict mode (adds overhead!)
-    // for dev mode only
-    strict: process.env.DEV
-  })
-
-  return Store
-}
+  // enable strict mode (adds overhead!)
+  // for dev mode only
+  strict: process.env.DEV
+})

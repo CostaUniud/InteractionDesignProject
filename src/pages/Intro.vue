@@ -12,7 +12,7 @@
     class="text-white outline"
     ref="carousel"
   >
-    <q-carousel-slide :name="1" class="column no-wrap flex-center" img-src="@/assets/carousel1.jpeg" img-style="filter: grayscale(100%);">
+    <q-carousel-slide :name="1" class="column no-wrap flex-center" img-src="@/assets/carousel1.jpg" img-style="filter: grayscale(100%);">
       <q-btn :ripple="false" round color="green" size="40px">
         <img src="@/assets/icona.png" style="height: 75px; max-width: 75px"/>
       </q-btn>
@@ -21,14 +21,14 @@
         {{ testo1 }}
       </div>
     </q-carousel-slide>
-    <q-carousel-slide :name="2" class="column no-wrap flex-center" img-src="@/assets/carousel2.jpeg">
+    <q-carousel-slide :name="2" class="column no-wrap flex-center" img-src="@/assets/carousel2.jpg">
       <q-btn :ripple="false" round color="green" icon="mdi-earth" size="40px"/>
       <div class="q-mt-xl text-center">
         <q-item-label class="text-white text-center text-weight-bold text-h5 q-mb-xl">Agisci</q-item-label>
         {{ testo2 }}
       </div>
     </q-carousel-slide>
-    <q-carousel-slide :name="3" class="column no-wrap flex-center" img-src="@/assets/carousel3.jpeg">
+    <q-carousel-slide :name="3" class="column no-wrap flex-center" img-src="@/assets/carousel3.jpg">
       <q-btn :ripple="false" round color="green" icon="mdi-hand-heart" size="40px"/>
       <div class="q-mt-xl text-center">
         <q-item-label class="text-white text-center text-weight-bold text-h5 q-mb-xl">Migliora</q-item-label>
