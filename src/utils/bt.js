@@ -1,21 +1,10 @@
-import { Notify, LocalStorage } from 'quasar'
+import { LocalStorage } from 'quasar'
 
 export function upperLowerCase (str) {
   if (!str) {
     return
   }
   return str.toLowerCase().split(' ').map(x => x.charAt(0).toUpperCase() + x.slice(1)).join(' ')
-}
-
-export function notify (message, ifHtml) {
-  if (typeof (message) === 'object') {
-    Notify.create(message)
-  } else {
-    Notify.create({
-      message: message,
-      html: ifHtml
-    })
-  }
 }
 
 export async function getCameraImage (context) {
@@ -31,7 +20,7 @@ export async function getCameraImage (context) {
       targetWidth: 250,
       saveToPhotoAlbum: false,
       correctOrientation: true,
-      cameraDirection: 1 // Non funziona la scelta camera frontale/posteriore con Android
+      cameraDirection: 1
     }
 
     camera.getPicture(async imageURI => {
@@ -186,6 +175,7 @@ export function getDistanzaPercorsaTask () {
 export function logout () {
   // removeLogin()
   stopWatchPosition()
+  window.QRScanner.destroy()
   LocalStorage.remove('_foto')
   LocalStorage.remove('_nome')
   LocalStorage.remove('_coin')

@@ -34,10 +34,11 @@
                   <br><span class="text-weight-bold">Ricorda:</span> Vyca controllerà che tu stia camminando anche se spegni lo schermo o usi un'altra app, ma se la chiudi non potrà
                   farlo e non guadagnerai VYcoin!
                 </q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
+                <q-item-label class="q-pt-xs">
+                  Vechie coord: Lat: {{ latitudine }} Long: {{ longitudine }}
+                  <br/>Nuove coord: Lat: {{ updatedLatitude }} Long: {{ updatedLongitude }}
+                  <br/>Speed: {{ speed }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -73,9 +74,11 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
     return {
-      latitudine: null,
-      longitudine: null,
-      speed: null
+      latitudine: 0,
+      longitudine: 0,
+      speed: 0,
+      updatedLatitude: 0,
+      updatedLongitude: 0
     }
   },
   computed: {
@@ -91,15 +94,15 @@ export default {
       this.$q.loading.show({ message: 'Rivelando posizione...' })
       let position = await getCurrentPosition()
 
-      this.latitude = Math.round(position.coords.latitude * 100000) / 100000
-      this.longitudine = Math.round(position.coords.longitudine * 100000) / 100000
+      this.latitude = Math.round(position.coords.latitude * 10000) / 10000
+      this.longitudine = Math.round(position.coords.longitudine * 10000) / 10000
 
       this.watchPosition()
     },
     watchPosition () {
       var that = this
       var firstTime = true
-      var count = 0
+      // var count = 0
       setDistanzaPercorsaTask(0)
       setCoinTask(0)
 
@@ -132,19 +135,20 @@ export default {
             }
             that.setWatchID(watchID)
 
-            let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
-            let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
-
-            if (updatedLatitude !== that.latitudine && updatedLongitude !== that.longitudine) {
-              that.latitudine = updatedLatitude
-              that.longitudine = updatedLongitude
+            that.updatedLatitude = Math.round(position.coords.latitude * 10000) / 10000
+            that.updatedLongitude = Math.round(position.coords.longitude * 10000) / 10000
+            console.log('vecchie: lan: ' + that.latitudine + ' log: ' + that.longitudine)
+            console.log('nuove: lan: ' + that.updatedLatitude + ' log: ' + that.updatedLongitude)
+            if (that.updatedLatitude !== that.latitudine && that.updatedLongitude !== that.longitudine) {
+              that.latitudine = that.updatedLatitude
+              that.longitudine = that.updatedLongitude
 
               that.speed = position.coords.speed * 3.6
               console.log(that.speed)
-              count++
-              console.log(count)
+              // count++
+              // console.log(count)
 
-              if (that.speed > 4 && that.speed < 10 && count > 20) {
+              if (that.speed > 4 && that.speed < 10) { // && count > 20
                 setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (that.speed * (1 / 3600)))
                 setDistanzaPercorsa(getDistanzaPercorsa() + (that.speed * (1 / 3600)))
                 setCoinTask(getCoinTask() + 0.1)
@@ -204,6 +208,11 @@ export default {
           ]
         })
       }
+      this.latitudine = 0
+      this.longitudine = 0
+      this.speed = 0
+      this.updatedLatitude = 0
+      this.updatedLongitude = 0
     }
   }
 }

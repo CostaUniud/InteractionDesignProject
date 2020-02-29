@@ -13,7 +13,7 @@
         <Profilo/>
       </q-tab-panel>
     </q-tab-panels>
-    <q-footer>
+    <q-footer v-if="!getScan">
       <q-tabs
         v-model="tab"
         dense

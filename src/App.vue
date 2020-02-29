@@ -5,7 +5,7 @@
     <q-btn v-if="getScan" class="btn-close" round color="green" icon="mdi-close" @click="chiudiScan()" size="lg"/>
     <q-btn v-if="getScan" class="btn-light" round color="green" :icon="light ? 'mdi-flashlight-off' : 'mdi-flashlight'" @click="turnOnLight()" size="lg"/>
     <q-btn v-if="getScan" class="btn-reverse" round color="green" icon="mdi-autorenew" @click="reverseCamera()" size="lg"/>
-    <img v-if="getScan" src="@/assets/qr_region.png" id="qr_region">
+    <img v-if="getScan" src="@/assets/scan.png" id="qr_region">
   </div>
 </template>
 
@@ -109,10 +109,4 @@ export default {
   position: absolute
   bottom: 8vh
   right: 30vw
-// .poppins
-//   font-family: 'Poppins'
-// .yellow
-//   color: $yellow
-// .sfondo-green
-//   background-color: $green
 </style>

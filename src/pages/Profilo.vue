@@ -84,8 +84,28 @@
               <q-card-section class="q-pt-none">
                 <Coin/>
               </q-card-section>
-              {{ tagContents }}
             </q-card>
+          </q-item-section>
+        </q-item>
+        <!-- NFC -->
+        <q-item style="width: 100vw">
+          <q-item-section>
+            <q-card class="border-radius q-pa-md">
+              <q-btn
+                flat
+                dense
+                round
+                class="gray1"
+                label="nfc"
+                icon="mdi-cellphone-nfc"
+                aria-label="nfc"
+                @click="nfc()"
+                style="width: 80vw"
+              />
+            </q-card>
+          </q-item-section>
+          <q-item-section>
+            {{ tagContents }}
           </q-item-section>
         </q-item>
         <!-- Logout -->
@@ -206,18 +226,12 @@ export default {
       this.$router.push({ path: '/login' })
     },
     async qrCode () {
-      // window.QRScanner.prepare(async function onDone (error, status) {
-      //   console.log('scanner pronto')
-      //   if (error) {
-      //     console.error(error)
-      //   }
-      //   if (status.authorized) {
-      //     console.log('autorizzato')
       await this.scanQR()
         .then(res => {
-          console.log(res)
           window.QRScanner.destroy()
+
           this.setScan(false)
+
           this.$store.commit('conf/dialog', {
             visible: true,
             icon: 'mdi-qrcode-scan',
@@ -239,11 +253,6 @@ export default {
         .catch(error => {
           console.log('scanQR', error)
         })
-
-      //   } else if (status.denied) {
-      //   } else {
-      //   }
-      // })
     },
     async scanQR () {
       this.setScan(true)
@@ -254,31 +263,53 @@ export default {
             if (err) {
               reject(err)
             } else {
-              console.log('entro?')
               resolve(text)
             }
           })
       })
+    },
+    nfc () {
+      var that = this
+
+      document.addEventListener('deviceready',
+        window.nfc.addNdefListener(function (nfcEvent) {
+          console.log(JSON.stringify(nfcEvent.tag))
+          var tag = nfcEvent.tag
+
+          // BB7 has different names, copy to Android names
+          if (tag.serialNumber) {
+            tag.id = tag.serialNumber
+            tag.isWritable = !tag.isLocked
+            tag.canMakeReadOnly = tag.isLockable
+          }
+
+          that.tagContents = tag
+
+          navigator.vibrate(100)
+        },
+        function () {
+          console.log('Listening for NDEF tags')
+        },
+        function (error) {
+          console.log('Error adding non-NDEF listener', JSON.stringify(error))
+        }),
+
+        window.nfc.addTagDiscoveredListener(function (nfcEvent) {
+          var tag = nfcEvent.tag
+
+          console.log(JSON.stringify(nfcEvent.tag))
+
+          that.tagContents = tag
+          navigator.vibrate(2000)
+        },
+        function () {
+          console.log('Listening for non-NDEF tags')
+        },
+        function (error) {
+          console.log('Error adding non-NDEF listener', JSON.stringify(error))
+        })
+      )
     }
-    // nfc () {
-    //   document.addEventListener('deviceready',
-    //     nfc.addNdefListener(function (nfcEvent) {
-    //       var tag = nfcEvent.tag
-
-    //       console.log(JSON.stringify(nfcEvent.tag))
-
-    //       this.tagContents = tag
-    //       navigator.notification.vibrate(100)
-    //     },
-    //     function () {
-    //       console.log('Listening for non-NDEF tags')
-    //     },
-    //     function (error) {
-    //       console.log('Error adding non-NDEF listener', JSON.stringify(error))
-    //     })
-    //     , false
-    //   )
-    // }
   }
 }
 </script>
