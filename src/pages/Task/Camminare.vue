@@ -99,6 +99,7 @@ export default {
     watchPosition () {
       var that = this
       var firstTime = true
+      var count = 0
       setDistanzaPercorsaTask(0)
       setCoinTask(0)
 
@@ -139,8 +140,11 @@ export default {
               that.longitudine = updatedLongitude
 
               that.speed = position.coords.speed * 3.6
+              console.log(that.speed)
+              count++
+              console.log(count)
 
-              if (that.speed > 4 && that.speed < 10) {
+              if (that.speed > 4 && that.speed < 10 && count > 20) {
                 setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (that.speed * (1 / 3600)))
                 setDistanzaPercorsa(getDistanzaPercorsa() + (that.speed * (1 / 3600)))
                 setCoinTask(getCoinTask() + 0.1)

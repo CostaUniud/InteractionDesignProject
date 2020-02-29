@@ -2,6 +2,9 @@
   <div id="q-app" class="sfondo" :class="getScan ? 'trasparente' : ''">
     <router-view />
     <bt-dialog :params="dialog" />
+    <q-btn v-if="getScan" class="btn-close" round color="green" icon="mdi-close" @click="chiudiScan()" size="lg"/>
+    <q-btn v-if="getScan" class="btn-light" round color="green" :icon="light ? 'mdi-flashlight-off' : 'mdi-flashlight'" @click="turnOnLight()" size="lg"/>
+    <q-btn v-if="getScan" class="btn-reverse" round color="green" icon="mdi-autorenew" @click="reverseCamera()" size="lg"/>
     <img v-if="getScan" src="@/assets/qr_region.png" id="qr_region">
   </div>
 </template>
@@ -15,7 +18,9 @@ export default {
   name: 'App',
   data () {
     return {
-      ciao: 'ciao'
+      ciao: 'ciao',
+      light: false,
+      reverse: false
     }
   },
   components: {
@@ -29,8 +34,31 @@ export default {
   },
   methods: {
     ...mapMutations({
-      'setFotoProfilo': 'conf/setFotoProfilo'
-    })
+      'setFotoProfilo': 'conf/setFotoProfilo',
+      'setScan': 'conf/setScan'
+    }),
+    turnOnLight () {
+      if (!this.light) {
+        window.QRScanner.enableLight()
+        this.light = true
+      } else {
+        window.QRScanner.disableLight()
+        this.light = false
+      }
+    },
+    reverseCamera () {
+      if (!this.reverse) {
+        window.QRScanner.useFrontCamera()
+        this.reverse = true
+      } else {
+        window.QRScanner.useBackCamera()
+        this.reverse = false
+      }
+    },
+    chiudiScan () {
+      window.QRScanner.destroy()
+      this.setScan(false)
+    }
   },
   mounted () {
     window.screen.orientation.lock('portrait')
@@ -69,6 +97,18 @@ export default {
   height: 80vw
   top: calc(50vh - 40vw - 33px)
   left: 10vw
+.btn-close
+  position: absolute
+  top: 8vh
+  right: 3vw
+.btn-light
+  position: absolute
+  bottom: 8vh
+  left: 30vw
+.btn-reverse
+  position: absolute
+  bottom: 8vh
+  right: 30vw
 // .poppins
 //   font-family: 'Poppins'
 // .yellow
