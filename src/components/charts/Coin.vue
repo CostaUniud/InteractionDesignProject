@@ -1,7 +1,6 @@
 <template>
   <div class="small">
     <pie-chart :chart-data="datacollection"></pie-chart>
-    <!-- <button @click="fillData()">Randomize</button> -->
   </div>
 </template>
 
@@ -23,14 +22,31 @@ export default {
   },
   methods: {
     fillData () {
-      this.datacollection = {
-        labels: ['Aria', 'Mobilità', 'Verde', 'Energia'],
-        datasets: [
-          {
-            backgroundColor: ['#2B86DB', '#FF7E79', '#319B62', '#F2C94C'],
-            data: [getCoinAria(), 0, 0, 0]
-          }
-        ]
+      if (getCoinAria() !== null) {
+        let aria = Math.round(getCoinAria() * 100) / 100
+        this.datacollection = {
+          labels: ['Aria', 'Mobilità', 'Verde', 'Energia'],
+          datasets: [
+            {
+              backgroundColor: ['#2B86DB', '#FF7E79', '#319B62', '#F2C94C'],
+              data: [aria, 0, 0, 0]
+            }
+          ]
+        }
+      } else {
+        this.datacollection = {
+          labels: ['Aria', 'Mobilità', 'Verde', 'Energia'],
+          datasets: [
+            {
+              backgroundColor: ['#2B86DB', '#FF7E79', '#319B62', '#F2C94C'],
+              data: [0, 0, 0, 0]
+            },
+            {
+              backgroundColor: ['#919191'],
+              data: [100]
+            }
+          ]
+        }
       }
     }
   }

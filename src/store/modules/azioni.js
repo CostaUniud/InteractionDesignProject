@@ -25,8 +25,6 @@ const actions = {
       store.dispatch('db/open')
         .then(db => {
           db.transaction(function (tx) {
-            tx.executeSql('DELETE FROM azione', [])
-            // tx.executeSql('DROP TABLE IF EXISTS azione')
             tx.executeSql(
               `CREATE TABLE IF NOT EXISTS azione(
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -55,7 +53,7 @@ const actions = {
           }, function (error) {
             reject(error)
           }, function () {
-            console.log('salvaAzione > ok')
+            // console.log('salvaAzione > ok')
           })
         })
         .catch(error => {
@@ -89,6 +87,24 @@ const actions = {
             reject(error)
           }, function () {
             // console.log('ottieniAzioni transaction ok')
+          })
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+  cancellaAzioni () {
+    return new Promise((resolve, reject) => {
+      store.dispatch('db/open')
+        .then(db => {
+          db.transaction(function (tx) {
+            tx.executeSql('DELETE FROM azione', [])
+            resolve(true)
+          }, function (error) {
+            reject(error)
+          }, function () {
+            // console.log('cancellaAzioni > ok')
           })
         })
         .catch(error => {

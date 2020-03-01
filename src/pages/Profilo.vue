@@ -55,7 +55,7 @@
               </q-item>
               <q-card-section horizontal>
                 <q-card-section class="q-pt-none">
-                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa() ? 0 : (Math.round(getDistanzaPercorsa() * 120  * 100) / 100) }} g</q-item-label>
+                  <q-item-label class="text-green text-weight-bolder" style="font-size: 1.2em">{{ !getDistanzaPercorsa() ? 0 : (Math.round(getDistanzaPercorsa() * 120)) }} g</q-item-label>
                   <q-item-label class="text-green text-weight-bold" style="font-size: 1.2em">Good Job!</q-item-label>
                 </q-card-section>
                 <q-card-section class="q-pt-none">
@@ -153,7 +153,7 @@
 
 <script>
 import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64, getFoto, setFoto } from '@/utils/bt.js'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import Coin from '@/components/charts/Coin'
 
 export default {
@@ -184,6 +184,9 @@ export default {
       'setTab': 'conf/setTab',
       'setFotoProfilo': 'conf/setFotoProfilo',
       'setScan': 'conf/setScan'
+    }),
+    ...mapActions({
+      'cancellaAzioni': 'azioni/cancellaAzioni'
     }),
     getNome,
     getCoin,
@@ -222,6 +225,7 @@ export default {
       stopWatchPosition(this.getWatchID)
       this.setFotoProfilo(null)
       logout()
+      this.cancellaAzioni()
       this.$router.push({ path: '/login' })
     },
     async qrCode () {
