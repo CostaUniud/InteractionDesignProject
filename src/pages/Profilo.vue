@@ -86,22 +86,16 @@
               </q-card-section>
             </q-card>
           </q-item-section>
-        </q-item>
-        <!-- NFC -->
-        <q-item style="width: 100vw">
-          <q-item-section>
-            <q-card class="border-radius q-pa-md">
-              <q-btn
-                flat
-                dense
-                round
-                class="gray1"
-                label="nfc"
-                icon="mdi-cellphone-nfc"
-                aria-label="nfc"
-                @click="nfc()"
-                style="width: 80vw"
-              />
+          <q-item-section side>
+            <q-card class="border-radius q-pa-md q-mb-sm">
+              <q-btn stack flat dense round color="blue" icon="mdi-cellphone-nfc" @click="nfcRead()" style="height: 80px; width: 20vw">
+                <q-item-label class="q-mt-xs gray1">Lettura <br>nfc</q-item-label>
+              </q-btn>
+            </q-card>
+            <q-card class="border-radius q-pa-md q-mt-sm">
+              <q-btn stack flat dense round color="red" icon="mdi-cellphone-nfc" @click="nfcDialog = true" style="height: 80px; width: 20vw">
+                <q-item-label class="q-mt-xs gray1">Scrittura <br>nfc</q-item-label>
+              </q-btn>
             </q-card>
           </q-item-section>
         </q-item>
@@ -109,23 +103,13 @@
         <q-item style="width: 100vw">
           <q-item-section>
             <q-card class="border-radius q-pa-md">
-              <q-btn
-                flat
-                dense
-                round
-                class="gray1"
-                label="Logout"
-                icon="logout"
-                aria-label="Esci"
-                @click="myLogout()"
-                style="width: 80vw"
-              />
+              <q-btn flat dense round class="gray1" label="Logout" icon="logout" @click="myLogout()" style="width: 80vw"/>
             </q-card>
           </q-item-section>
         </q-item>
       </q-list>
     </div>
-
+    <!-- Dialog scelta foto -->
     <q-dialog v-model="fotoDialog">
       <q-card style="width: 250px; border-radius: 20px">
         <q-card-actions>
@@ -147,20 +131,36 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <!-- Dialog scrittura nfc -->
+    <q-dialog v-model="nfcDialog">
+      <q-card style="width: 250px; border-radius: 20px">
+        <q-card-section>
+          <q-item>
+            <q-input filled v-model="text"/>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <q-btn color="red" label="Scrivi NFC" @click="scriviNfc()"/>
+            </q-item-section>
+          </q-item>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
-import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64, getFoto, setFoto } from '@/utils/bt.js'
+import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64, getFoto, setFoto, nfcRead, nfcWrite } from '@/utils/bt.js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import Coin from '@/components/charts/Coin'
 
 export default {
   data () {
     return {
-      coin: 0,
       foto: null,
-      fotoDialog: false
+      fotoDialog: false,
+      nfcDialog: false,
+      text: ''
     }
   },
   components: {
@@ -191,6 +191,7 @@ export default {
     getCoin,
     getDistanzaPercorsa,
     getFoto,
+    nfcRead,
     async filesSelected () {
       this.card = false
       let file = await this.readFile(this.foto[0])
@@ -263,62 +264,15 @@ export default {
           })
       })
     },
-    nfc () {
-      var that = this
-
-      document.addEventListener('deviceready',
-        window.nfc.addNdefListener(function (nfcEvent) {
-          console.log(JSON.stringify(nfcEvent.tag))
-          var tag = nfcEvent.tag
-
-          if (tag.serialNumber) {
-            tag.id = tag.serialNumber
-            tag.isWritable = !tag.isLocked
-            tag.canMakeReadOnly = tag.isLockable
-          }
-
-          let tagContents = window.nfc.bytesToString(tag.ndefMessage[0].payload)
-
-          that.$store.commit('conf/dialog', {
-            visible: true,
-            icon: 'mdi-nfc',
-            color: 'blue',
-            textColor: 'white',
-            class: 'text-body1 gray1',
-            label: 'Connessione NFC riuscita! Ecco il tuo risultato: ' + tagContents,
-            actions: [
-              {
-                label: 'Chiudi',
-                color: 'green',
-                action: () => {
-                  that.$store.commit('conf/dialog', {})
-                }
-              }
-            ]
-          })
-          navigator.vibrate(2000)
-        },
-        function () {
-          console.log('Listening for NDEF tags')
-        },
-        function (error) {
-          console.log('Error adding non-NDEF listener', JSON.stringify(error))
-        }),
-
-        window.nfc.addTagDiscoveredListener(function (nfcEvent) {
-          var tag = nfcEvent.tag
-          console.log(JSON.stringify(nfcEvent.tag))
-
-          that.tagContents = window.nfc.bytesToString(tag)
-          navigator.vibrate(2000)
-        },
-        function () {
-          console.log('Listening for non-NDEF tags')
-        },
-        function (error) {
-          console.log('Error adding non-NDEF listener', JSON.stringify(error))
+    async scriviNfc () {
+      this.nfcDialog = false
+      await nfcWrite(this.text)
+        .then(res => {
+          this.text = ''
         })
-      )
+        .catch(error => {
+          console.log('scriviNfc > error', error)
+        })
     },
     myLogout () {
       stopWatchPosition(this.getWatchID)

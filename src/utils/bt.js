@@ -1,4 +1,5 @@
 import { LocalStorage } from 'quasar'
+import store from '@/store'
 
 export function formatDate (d) {
   let dd = d.getDate()
@@ -106,6 +107,172 @@ export async function getCurrentPosition () {
 export function stopWatchPosition (watchID) {
   // console.log('stop', watchID)
   navigator.geolocation.clearWatch(watchID)
+}
+
+export function nfcRead () {
+  return new Promise((resolve, reject) => {
+    window.nfc.addNdefListener(function (nfcEvent) {
+      console.log(JSON.stringify(nfcEvent.tag))
+      var tag = nfcEvent.tag
+
+      if (tag.serialNumber) {
+        tag.id = tag.serialNumber
+        tag.isWritable = !tag.isLocked
+        tag.canMakeReadOnly = tag.isLockable
+      }
+
+      let tagContents = window.nfc.bytesToString(tag.ndefMessage[0].payload)
+
+      store.commit('conf/dialog', {
+        visible: true,
+        icon: 'mdi-nfc',
+        color: 'blue',
+        textColor: 'white',
+        class: 'text-body1 gray1',
+        label: 'Connessione NFC riuscita! Ecco il tuo risultato: ' + tagContents,
+        actions: [
+          {
+            label: 'Chiudi',
+            color: 'green',
+            action: () => {
+              store.commit('conf/dialog', {})
+            }
+          }
+        ]
+      })
+      navigator.vibrate(2000)
+      window.nfc.removeNdefListener()
+      resolve(true)
+    },
+    function () {
+      // console.log('Listening for NDEF tags')
+      store.commit('conf/dialog', {
+        visible: true,
+        icon: 'mdi-cellphone-nfc',
+        color: 'green',
+        textColor: 'white',
+        class: 'text-body1 gray1',
+        label: 'Avvicina il tag NFC al tuo cellulare per leggerlo.',
+        actions: [
+          {
+            label: 'Chiudi',
+            color: 'green',
+            action: () => {
+              store.commit('conf/dialog', {})
+            }
+          }
+        ]
+      })
+    },
+    function (error) {
+      console.log('Error adding non-NDEF listener', JSON.stringify(error))
+      reject(error)
+    })
+  })
+
+  // if (window.device.platform === 'Android') {
+  //   return new Promise((resolve, reject) => {
+  //     window.nfc.addTagDiscoveredListener(function (nfcEvent) {
+  //       var tag = nfcEvent.tag
+  //       console.log(JSON.stringify(nfcEvent.tag))
+
+  //       let tagContents = window.nfc.bytesToString(tag)
+  //       store.commit('conf/dialog', {
+  //         visible: true,
+  //         icon: 'mdi-nfc',
+  //         color: 'blue',
+  //         textColor: 'white',
+  //         class: 'text-body1 gray1',
+  //         label: 'Connessione NFC riuscita! Ecco il tuo risultato: ' + tagContents,
+  //         actions: [
+  //           {
+  //             label: 'Chiudi',
+  //             color: 'green',
+  //             action: () => {
+  //               store.commit('conf/dialog', {})
+  //             }
+  //           }
+  //         ]
+  //       })
+  //       navigator.vibrate(2000)
+  //       window.nfc.removeTagDiscoveredListener()
+  //       resolve(true)
+  //     },
+  //     function () {
+  //       // console.log('Listening for non-NDEF tags')
+  //     },
+  //     function (error) {
+  //       console.log('Error adding non-NDEF listener', JSON.stringify(error))
+  //       reject(error)
+  //     })
+  //   })
+  // }
+}
+
+export function nfcWrite (text) {
+  return new Promise((resolve, reject) => {
+    window.nfc.addTagDiscoveredListener(function (nfcEvent) {
+      var mimeType = 'text/plain'
+      var payload = text
+      var record = window.ndef.mimeMediaRecord(mimeType, window.nfc.stringToBytes(payload))
+
+      window.nfc.write(
+        [record],
+        function () {
+          console.log('Wrote data to tag')
+          store.commit('conf/dialog', {
+            visible: true,
+            icon: 'mdi-nfc',
+            color: 'blue',
+            textColor: 'white',
+            class: 'text-body1 gray1',
+            label: 'Scrittura effettuata!',
+            actions: [
+              {
+                label: 'Chiudi',
+                color: 'green',
+                action: () => {
+                  store.commit('conf/dialog', {})
+                }
+              }
+            ]
+          })
+          navigator.vibrate(2000)
+          window.nfc.removeTagDiscoveredListener()
+          resolve(true)
+        },
+        function (error) {
+          console.log(error)
+        }
+      )
+    },
+    function () {
+      // console.log('Listening for non-NDEF tags')
+      setTimeout(function () {
+        store.commit('conf/dialog', {
+          visible: true,
+          icon: 'mdi-cellphone-nfc',
+          color: 'green',
+          textColor: 'white',
+          class: 'text-body1 gray1',
+          label: 'Avvicina il tag NFC al tuo cellulare per scriverlo.',
+          actions: [
+            {
+              label: 'Chiudi',
+              color: 'green',
+              action: () => {
+                store.commit('conf/dialog', {})
+              }
+            }
+          ]
+        })
+      }, 1000)
+    },
+    function (error) {
+      console.log('Error adding non-NDEF listener', JSON.stringify(error))
+      reject(error)
+    })
+  })
 }
 
 export function setLogin (token) {
