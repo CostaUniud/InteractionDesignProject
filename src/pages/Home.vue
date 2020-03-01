@@ -10,9 +10,8 @@
       narrow-indicator
     >
       <q-tab name="map" label="Mappa" icon="map"/>
-      <q-tab name="dash" label="Dashboard" icon="equalizer"/>
+      <q-tab name="dash" label="Dashboard" icon="mdi-chart-bar"/>
     </q-tabs>
-    <!-- <p>{{ datiAria }}</p> -->
     <q-tab-panels v-model="tab" animated class="sfondo">
       <q-tab-panel name="map" class="q-pa-none">
         <Mappa/>

@@ -103,7 +103,6 @@
                 style="width: 80vw"
               />
             </q-card>
-            {{ tagContents }}
           </q-item-section>
         </q-item>
         <!-- Logout -->
@@ -161,8 +160,7 @@ export default {
     return {
       coin: 0,
       foto: null,
-      fotoDialog: false,
-      tagContents: null
+      fotoDialog: false
     }
   },
   components: {
@@ -183,7 +181,8 @@ export default {
     ...mapMutations({
       'setTab': 'conf/setTab',
       'setFotoProfilo': 'conf/setFotoProfilo',
-      'setScan': 'conf/setScan'
+      'setScan': 'conf/setScan',
+      'dialog': 'conf/dialog'
     }),
     ...mapActions({
       'cancellaAzioni': 'azioni/cancellaAzioni'
@@ -220,13 +219,6 @@ export default {
         .catch(error => {
           console.log('getCameraImage > error', error)
         })
-    },
-    myLogout () {
-      stopWatchPosition(this.getWatchID)
-      this.setFotoProfilo(null)
-      logout()
-      this.cancellaAzioni()
-      this.$router.push({ path: '/login' })
     },
     async qrCode () {
       await this.scanQR()
@@ -279,16 +271,32 @@ export default {
           console.log(JSON.stringify(nfcEvent.tag))
           var tag = nfcEvent.tag
 
-          // BB7 has different names, copy to Android names
           if (tag.serialNumber) {
             tag.id = tag.serialNumber
             tag.isWritable = !tag.isLocked
             tag.canMakeReadOnly = tag.isLockable
           }
 
-          that.tagContents = tag
+          let tagContents = window.nfc.bytesToString(tag.ndefMessage[0].payload)
 
-          navigator.vibrate(100)
+          that.$store.commit('conf/dialog', {
+            visible: true,
+            icon: 'mdi-nfc',
+            color: 'blue',
+            textColor: 'white',
+            class: 'text-body1 gray1',
+            label: 'Connessione NFC riuscita! Ecco il tuo risultato: ' + tagContents,
+            actions: [
+              {
+                label: 'Chiudi',
+                color: 'green',
+                action: () => {
+                  that.$store.commit('conf/dialog', {})
+                }
+              }
+            ]
+          })
+          navigator.vibrate(2000)
         },
         function () {
           console.log('Listening for NDEF tags')
@@ -299,10 +307,9 @@ export default {
 
         window.nfc.addTagDiscoveredListener(function (nfcEvent) {
           var tag = nfcEvent.tag
-
           console.log(JSON.stringify(nfcEvent.tag))
 
-          that.tagContents = tag
+          that.tagContents = window.nfc.bytesToString(tag)
           navigator.vibrate(2000)
         },
         function () {
@@ -312,6 +319,13 @@ export default {
           console.log('Error adding non-NDEF listener', JSON.stringify(error))
         })
       )
+    },
+    myLogout () {
+      stopWatchPosition(this.getWatchID)
+      this.setFotoProfilo(null)
+      logout()
+      this.cancellaAzioni()
+      this.$router.push({ path: '/login' })
     }
   }
 }

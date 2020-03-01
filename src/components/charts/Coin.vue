@@ -35,15 +35,11 @@ export default {
         }
       } else {
         this.datacollection = {
-          labels: ['Aria', 'Mobilità', 'Verde', 'Energia'],
+          labels: ['VYoin'],
           datasets: [
             {
-              backgroundColor: ['#2B86DB', '#FF7E79', '#319B62', '#F2C94C'],
-              data: [0, 0, 0, 0]
-            },
-            {
               backgroundColor: ['#919191'],
-              data: [100]
+              data: [1]
             }
           ]
         }

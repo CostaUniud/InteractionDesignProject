@@ -82,7 +82,7 @@
           </q-virtual-scroll>
           <div v-else class="absolute-center text-center q-gutter-y-md">
             <q-icon name="not_interested" class="text-grey-4" style="font-size: 4em"></q-icon>
-            <div class="text-h6 text-grey-6">Nessuna task ancora realizzata.</div>
+            <div class="text-h6 text-grey-6">Nessuna task ancora realizzata</div>
           </div>
         </div>
       </q-page>
