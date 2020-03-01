@@ -63,7 +63,7 @@
 
 <script>
 import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa,
-  getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask } from '@/utils/bt.js'
+  getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask, setCoinAria } from '@/utils/bt.js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -97,7 +97,7 @@ export default {
     watchPosition () {
       var that = this
       var firstTime = true
-      var count = 0
+      // var count = 0
       setDistanzaPercorsaTask(0)
       setCoinTask(0)
 
@@ -130,30 +130,30 @@ export default {
             }
             that.setWatchID(watchID)
 
-            let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
-            let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
-            let speed = position.coords.speed * 3.6
-            // let speed = 10
-            count++
+            // let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
+            // let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
+            // let speed = position.coords.speed * 3.6
+            let speed = 10
+            // count++
 
-            // setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
-            // setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
-            // let coinTaskOld = getCoinTask()
-            // setCoinTask(10 * getDistanzaPercorsaTask())
-            // setCoin(getCoin() + getCoinTask() - coinTaskOld)
+            setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
+            setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
+            let coinTaskOld = getCoinTask()
+            setCoinTask(10 * getDistanzaPercorsaTask())
+            setCoin(getCoin() + getCoinTask() - coinTaskOld)
 
-            if (updatedLatitude !== that.latitudine || updatedLongitude !== that.longitudine) {
-              that.latitudine = updatedLatitude
-              that.longitudine = updatedLongitude
+            // if (updatedLatitude !== that.latitudine || updatedLongitude !== that.longitudine) {
+            //   that.latitudine = updatedLatitude
+            //   that.longitudine = updatedLongitude
 
-              if (speed > 4 && speed < 10 && count > 60) {
-                setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
-                setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
-                let coinTaskOld = getCoinTask()
-                setCoinTask(10 * getDistanzaPercorsaTask())
-                setCoin(getCoin() + getCoinTask() - coinTaskOld)
-              }
-            }
+            //   if (speed > 4 && speed < 10 && count > 60) {
+            //     setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
+            //     setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
+            //     let coinTaskOld = getCoinTask()
+            //     setCoinTask(10 * getDistanzaPercorsaTask())
+            //     setCoin(getCoin() + getCoinTask() - coinTaskOld)
+            //   }
+            // }
             resolve(true)
           },
           function onError (error) {
@@ -164,7 +164,6 @@ export default {
       })
     },
     async stop () {
-      this.$q.loading.show({ message: 'Salvando azione...' })
       stopWatchPosition(this.getWatchID)
 
       cordova.plugins.backgroundMode.disable()
@@ -176,6 +175,8 @@ export default {
       }
 
       if (getDistanzaPercorsaTask() !== 0 && getCoinTask() !== 0) {
+        this.$q.loading.show({ message: 'Salvando azione...' })
+        setCoinAria(Math.round(getCoinTask() * 100) / 100)
         await this.salvaAzione(payload)
           .then(res => {
             this.$q.loading.hide()

@@ -144,6 +144,16 @@ export function getNome () {
   return LocalStorage.getItem('_nome')
 }
 
+export function setFoto (foto) {
+  // console.log('setfoto')
+  LocalStorage.set('_foto', foto)
+}
+
+export function getFoto () {
+  // console.log('getfoto')
+  return LocalStorage.getItem('_foto')
+}
+
 export function setCoin (coin) {
   // console.log('setCoin', coin)
   LocalStorage.set('_coin', coin)
@@ -182,6 +192,16 @@ export function setDistanzaPercorsaTask (dist) {
 export function getDistanzaPercorsaTask () {
   // console.log('getDistanzaPercorsaTask', LocalStorage.getItem('_distTask'))
   return LocalStorage.getItem('_distTask')
+}
+
+export function setCoinAria (coin) {
+  console.log('setCoinAria', coin)
+  LocalStorage.set('_coinAria', coin)
+}
+
+export function getCoinAria () {
+  console.log('getCoinAria', LocalStorage.getItem('_coinAria'))
+  return LocalStorage.getItem('_coinAria')
 }
 
 export function logout () {

@@ -2,10 +2,10 @@
   <div v-if="!getScan" class="column">
     <!-- Foto profilo -->
     <div class="flex bg-green justify-center trasparente" style="height: 20vh">
-      <q-btn v-if="!getFotoProfilo" :ripple="false" round color="blue" size="40px" @click="inserisciFoto()" style="margin-top: 12vh">
+      <q-btn v-if="!getFotoProfilo" :ripple="false" round color="blue" size="40px" @click="fotoDialog = true" style="margin-top: 12vh">
         <q-icon name="mdi-account-box"/>
       </q-btn>
-      <q-avatar v-else class="shadow" size="120px" style="margin-top: 12vh;" @click="inserisciFoto()">
+      <q-avatar v-else class="shadow" size="120px" style="margin-top: 12vh;" @click="fotoDialog = true">
         <img :src="'data:image/png;base64,' + getFotoProfilo">
       </q-avatar>
     </div>
@@ -103,8 +103,6 @@
                 style="width: 80vw"
               />
             </q-card>
-          </q-item-section>
-          <q-item-section>
             {{ tagContents }}
           </q-item-section>
         </q-item>
@@ -129,7 +127,7 @@
       </q-list>
     </div>
 
-    <q-dialog v-model="card">
+    <q-dialog v-model="fotoDialog">
       <q-card style="width: 250px; border-radius: 20px">
         <q-card-actions>
           <q-item>
@@ -154,7 +152,7 @@
 </template>
 
 <script>
-import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64 } from '@/utils/bt.js'
+import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64, getFoto, setFoto } from '@/utils/bt.js'
 import { mapGetters, mapMutations } from 'vuex'
 import Coin from '@/components/charts/Coin'
 
@@ -163,7 +161,7 @@ export default {
     return {
       coin: 0,
       foto: null,
-      card: false,
+      fotoDialog: false,
       tagContents: null
     }
   },
@@ -172,6 +170,7 @@ export default {
   },
   mounted () {
     this.setTab('profilo')
+    this.setFotoProfilo(getFoto())
   },
   computed: {
     ...mapGetters({
@@ -189,14 +188,13 @@ export default {
     getNome,
     getCoin,
     getDistanzaPercorsa,
-    inserisciFoto () {
-      this.card = true
-    },
+    getFoto,
     async filesSelected () {
       this.card = false
       let file = await this.readFile(this.foto[0])
       let imgScr = await arrayBufferToBase64(file)
       this.setFotoProfilo(imgScr)
+      setFoto(imgScr)
       this.foto = null
     },
     readFile (file) {
@@ -213,6 +211,7 @@ export default {
       await getCameraImage()
         .then(res => {
           this.setFotoProfilo(res)
+          setFoto(res)
           this.card = false
         })
         .catch(error => {

@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import BtDialog from '@/components/BtDialog'
-import { LocalStorage } from 'quasar'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+import BtDialog from '@/components/BtDialog'
+// import { getFoto } from '@/utils/bt.js'
 
 export default {
   name: 'App',
@@ -27,7 +27,14 @@ export default {
     BtDialog
   },
   async beforeMount () {
+    window.screen.orientation.lock('portrait')
+
     await this.startDb()
+  },
+  mounted () {
+    cordova.plugins.backgroundMode.on('activate', function () {
+      cordova.plugins.backgroundMode.disableWebViewOptimizations()
+    })
   },
   beforeDestroy () {
     this.getDb.close()
@@ -69,15 +76,6 @@ export default {
       window.QRScanner.destroy()
       this.setScan(false)
     }
-  },
-  mounted () {
-    window.screen.orientation.lock('portrait')
-
-    this.setFotoProfilo(LocalStorage.getItem('_foto'))
-
-    cordova.plugins.backgroundMode.on('activate', function () {
-      cordova.plugins.backgroundMode.disableWebViewOptimizations()
-    })
   }
 }
 </script>

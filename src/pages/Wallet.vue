@@ -18,20 +18,22 @@
           <q-item>
             <q-item-section class="text-center q-mt-xl">
               <q-item-label class="text-green text-weight-bold text-h5 q-mb-md">Wallet</q-item-label>
-              <q-item-label class="gray1 text-subtitle1">Reconto task e acquisti</q-item-label>
+              <q-item-label class="gray1 text-subtitle1">Resoconto task e acquisti</q-item-label>
             </q-item-section>
           </q-item>
           <q-item>
-            <q-item-section>
-              <q-btn class="bg-green" color="white" rounded @click="$router.push({ path: '/acquisti' })" style="height: 70px">
-                <q-item-section class="text-center">
-                  <q-item-label class="text-h4 text-weight-bold border-radius">A<span class="text-lowercase">cquisti</span></q-item-label>
+            <q-card class="bg-yellow" rounded style="border-radius: 20px">
+              <q-item class="text-center">
+                <q-item-section>
+                  <q-item-label class="text-h4 text-white text-weight-bold border-radius">
+                    S<span class="text-lowercase">aldo:</span> {{ Math.round(getCoin() * 100) / 100 }}
+                  </q-item-label>
                 </q-item-section>
                 <q-item-section avatar>
-                  <q-icon size="3em" name="mdi-shopping-outline"/>
+                  <img src="@/assets/vycoin.png" style="height: 50px; max-width: 50px"/>
                 </q-item-section>
-              </q-btn>
-            </q-item-section>
+              </q-item>
+            </q-card>
           </q-item>
         </div>
 
@@ -90,6 +92,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { getCoin } from '@/utils/bt.js'
 
 export default {
   data () {
@@ -115,6 +118,7 @@ export default {
     ...mapActions({
       'ottieniAzioni': 'azioni/ottieniAzioni'
     }),
+    getCoin,
     tipo (tipo) {
       let colore
       switch (tipo) {

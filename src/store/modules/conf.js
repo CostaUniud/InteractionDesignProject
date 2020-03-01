@@ -1,5 +1,3 @@
-import { LocalStorage } from 'quasar'
-
 const state = {
   tab: 'home',
   watchID: '',
@@ -43,7 +41,6 @@ const mutations = {
   setFotoProfilo (state, value) {
     // console.log('setFoto')
     state.foto = value
-    LocalStorage.set('_foto', value)
   },
   dialog (state, value) {
     // console.log('setDialog', value)

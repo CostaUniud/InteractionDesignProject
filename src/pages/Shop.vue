@@ -21,9 +21,19 @@
               <q-item-label class="gray1 text-subtitle1">Scegli tra i prodotti offerti</q-item-label>
             </q-item-section>
           </q-item>
+          <q-item class="q-pb-none q-mb-none">
+            <q-btn class="bg-green" color="white" rounded @click="$router.push({ path: '/acquisti' })" style="height: 70px">
+              <q-item-section class="text-center">
+                <q-item-label class="text-h4 text-weight-bold border-radius">A<span class="text-lowercase">cquistati</span></q-item-label>
+              </q-item-section>
+              <q-item-section avatar>
+                <q-icon size="3em" name="mdi-shopping-outline"/>
+              </q-item-section>
+            </q-btn>
+          </q-item>
         </div>
 
-        <div class="col-auto q-mt-xl">
+        <div class="col-auto q-mt-md">
           <div class="row justify-center full-height full-width text-center">
             <q-list>
               <q-item-label class="text-left text-h5 gray1 text-weight-bold" header>Mobilità</q-item-label>

@@ -7,6 +7,7 @@
 
 <script>
 import PieChart from './PieChart.js'
+import { getCoinAria } from '@/utils/bt.js'
 
 export default {
   components: {
@@ -27,7 +28,7 @@ export default {
         datasets: [
           {
             backgroundColor: ['#2B86DB', '#FF7E79', '#319B62', '#F2C94C'],
-            data: [10, 20, 30, 40]
+            data: [getCoinAria(), 0, 0, 0]
           }
         ]
       }
