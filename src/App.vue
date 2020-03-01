@@ -12,7 +12,6 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import BtDialog from '@/components/BtDialog'
-// import { getFoto } from '@/utils/bt.js'
 
 export default {
   name: 'App',
@@ -83,6 +82,7 @@ export default {
 <style lang="sass">
 #q-app
   font-family: 'Poppins'
+  scroll-behavior: smooth
 .sfondo
   background-color: $gray2
 .gray1
