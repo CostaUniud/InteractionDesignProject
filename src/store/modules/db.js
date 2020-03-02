@@ -12,6 +12,12 @@ const getters = {
   }
 }
 
+const mutations = {
+  setDb (state, value) {
+    state.db = value
+  }
+}
+
 const actions = {
   open () {
     return new Promise((resolve) => {
@@ -27,12 +33,6 @@ const actions = {
       context.commit('setDb', db)
       resolve(db)
     })
-  }
-}
-
-const mutations = {
-  setDb (state, value) {
-    state.db = value
   }
 }
 

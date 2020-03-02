@@ -31,7 +31,7 @@ const actions = {
 
 const mutations = {
   setAria (state, value) {
-    console.log('setAria', value)
+    // console.log('setAria', value)
     state.aria = value
   }
 }

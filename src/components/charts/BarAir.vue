@@ -1,16 +1,16 @@
 <template>
   <div class="small">
-    <line-chart :chart-data="datacollection"></line-chart>
+    <bar-chart :chart-data="datacollection"></bar-chart>
   </div>
 </template>
 
 <script>
-import LineChart from './LineChart.js'
+import BarChart from './BarChart.js'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    LineChart
+    BarChart
   },
   data () {
     return {
@@ -38,9 +38,14 @@ export default {
   methods: {
     fillData () {
       this.datacollection = {
+        labels: ['CO'],
         datasets: [
           {
-            label: 'MQ9',
+            // barPercentage: 0.5,
+            // barThickness: 6,
+            // maxBarThickness: 8,
+            // minBarLength: 2,
+            label: 'CO',
             backgroundColor: '#FF7E79',
             data: this.arrayData
           }

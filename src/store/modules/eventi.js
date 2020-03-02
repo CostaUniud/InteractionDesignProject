@@ -25,7 +25,7 @@ const actions = {
       store.dispatch('db/open')
         .then(db => {
           db.transaction(function (tx) {
-            tx.executeSql('DELETE FROM evento', [])
+            // tx.executeSql('DELETE FROM evento', [])
             tx.executeSql(
               `CREATE TABLE IF NOT EXISTS evento(
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 

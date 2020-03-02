@@ -70,6 +70,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { setFirstTime, getFirstTime } from '@/utils/bt.js'
 
 export default {
   data () {
@@ -77,14 +78,28 @@ export default {
     }
   },
   async beforeMount () {
-    // Refresh lista eventi
-    await this.ottieniEventi()
-      .then(res => {
-        // console.log(res)
-      })
-      .catch(error => {
-        console.log('ottieniEventi > error', error)
-      })
+    var that = this
+
+    if (getFirstTime()) {
+      await that.ottieniEventi()
+    } else {
+      let evento = {
+        nome: 'Giornata del riciclo',
+        descrizione: 'Lo smaltimento dei rifiuti speciali. Scopri come diminuire l\'impatto ambientale.',
+        luogo: 'Piazza Cavour',
+        img: null
+      }
+
+      await that.salvaEvento(evento)
+        .then(async res => {
+          // Refresh lista eventi
+          await that.ottieniEventi()
+          setFirstTime(true)
+        })
+        .catch(error => {
+          console.log('salvaEvento > error', error)
+        })
+    }
   },
   computed: {
     ...mapGetters({
@@ -93,6 +108,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      'salvaEvento': 'eventi/salvaEvento',
       'ottieniEventi': 'eventi/ottieniEventi'
     }),
     salvaEventoCalendario (item) {

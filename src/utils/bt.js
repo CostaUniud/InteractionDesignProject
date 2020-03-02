@@ -357,6 +357,16 @@ export function getCoinAria () {
   return LocalStorage.getItem('_coinAria')
 }
 
+export function setFirstTime (value) {
+  console.log('setFirstTime', value)
+  LocalStorage.set('_first', value)
+}
+
+export function getFirstTime () {
+  console.log('getFirstTime', LocalStorage.getItem('_first'))
+  return LocalStorage.getItem('_first')
+}
+
 export function logout () {
   // removeLogin()
   stopWatchPosition()
@@ -366,4 +376,5 @@ export function logout () {
   LocalStorage.remove('_coin')
   LocalStorage.remove('_dist')
   LocalStorage.remove('_coinAria')
+  // LocalStorage.remove('_first')
 }

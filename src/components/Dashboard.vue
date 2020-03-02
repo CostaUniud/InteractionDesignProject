@@ -4,7 +4,7 @@
       <q-item-section>
         <q-card class="my-card">
           <q-card-section>
-            <Air/>
+            <BarAir/>
           </q-card-section>
         </q-card>
       </q-item-section>
@@ -37,7 +37,7 @@
                 <q-item-label class="gray1 text-weight-bold text-left text-body1">CO</q-item-label>
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-red text-weight-bold text-right text-body1">87mg</q-item-label>
+                <q-item-label class="text-red text-weight-bold text-right text-body1">{{ datiAria ? datiAria : 0 }}mg</q-item-label>
               </q-item-section>
             </q-item>
             <q-item dense class="q-pa-xs">
@@ -77,17 +77,21 @@
 
 <script>
 import { getDistanzaPercorsa } from '@/utils/bt.js'
-import Air from '@/components/charts/Air'
+import BarAir from '@/components/charts/BarAir'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    Air
+    BarAir
   },
   data () {
     return {
     }
   },
   computed: {
+    ...mapGetters({
+      'datiAria': 'aria/getAria'
+    })
   },
   methods: {
     getDistanzaPercorsa
