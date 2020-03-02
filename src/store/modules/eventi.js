@@ -2,58 +2,62 @@ import { formatDate } from '@/utils/bt.js'
 import store from '@/store'
 
 const state = {
-  azioni: []
+  eventi: []
 }
 
 const getters = {
-  getAzioni (state) {
-    // console.log('getAzioni', state.azioni)
-    return state.azioni
+  getEventi (state) {
+    console.log('getEventi', state.eventi)
+    return state.eventi
   }
 }
 
 const mutations = {
-  setAzioni (state, payload) {
-    // console.log('setAzioni', payload)
-    state.azioni = payload
+  setEventi (state, payload) {
+    console.log('setEventi', payload)
+    state.eventi = payload
   }
 }
 
 const actions = {
-  salvaAzione (context, payload) {
+  salvaEvento (context, payload) {
     return new Promise((resolve, reject) => {
       store.dispatch('db/open')
         .then(db => {
+          console.log(payload)
           db.transaction(function (tx) {
             tx.executeSql(
-              `CREATE TABLE IF NOT EXISTS azione(
+              `CREATE TABLE IF NOT EXISTS evento(
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                coin REAL NOT NULL, 
+                nome TEXT NOT NULL, 
+                descrizione TEXT NOT NULL, 
                 data TEXT NOT NULL, 
-                tipo TEXT NOT NULL, 
-                task TEXT NOT NULL
+                luogo TEXT NOT NULL,
+                img BLOB
               )`
             )
             let date = new Date()
             let insert = tx.executeSql(
-              `INSERT INTO azione(
-                coin,
+              `INSERT INTO evento(
+                nome,
+                descrizione,
                 data,
-                tipo,
-                task
-              ) VALUES ( ?, ?, ?, ? )`,
+                luogo,
+                img
+              ) VALUES ( ?, ?, ?, ?, ? )`,
               [
-                payload.coin,
+                payload.nome,
+                payload.descrizione,
                 formatDate(date),
-                payload.tipo,
-                payload.task
+                payload.luogo,
+                payload.img
               ]
             )
             resolve(insert)
           }, function (error) {
             reject(error)
           }, function () {
-            // console.log('salvaAzione > ok')
+            console.log('salvaEvento > ok')
           })
         })
         .catch(error => {
@@ -61,23 +65,23 @@ const actions = {
         })
     })
   },
-  ottieniAzioni (context) {
+  ottieniEventi (context) {
     return new Promise((resolve, reject) => {
       store.dispatch('db/open')
         .then((db) => {
           db.transaction(function (tx) {
             tx.executeSql(
               `SELECT * 
-              FROM azione
+              FROM evento
               ORDER BY id DESC`,
               [],
               function (tx, resultSet) {
                 let response = []
                 for (let r = 0; r < resultSet.rows.length; r++) {
-                  // console.log('ottieni azioni', resultSet.rows.item(r))
+                  // console.log('ottieni eventi', resultSet.rows.item(r))
                   response.push(resultSet.rows.item(r))
                 }
-                context.commit('setAzioni', response)
+                context.commit('setEventi', response)
                 resolve(response)
               }, function (error) {
                 reject(error)
@@ -86,25 +90,7 @@ const actions = {
           }, function (error) {
             reject(error)
           }, function () {
-            // console.log('ottieniAzioni transaction ok')
-          })
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-  cancellaAzioni () {
-    return new Promise((resolve, reject) => {
-      store.dispatch('db/open')
-        .then(db => {
-          db.transaction(function (tx) {
-            tx.executeSql('DELETE FROM azione', [])
-            resolve(true)
-          }, function (error) {
-            reject(error)
-          }, function () {
-            // console.log('cancellaAzioni > ok')
+            // console.log('ottieniEventi transaction ok')
           })
         })
         .catch(error => {

@@ -3,7 +3,7 @@
     <div class="flex justify-center">
       <q-item>
         <q-item-section class="text-center q-mt-xl">
-          <q-item-label class="text-green text-weight-bold text-h5 q-mb-md">Azioni</q-item-label>
+          <q-item-label class="text-green text-weight-bold text-h5 q-mb-md">Menu</q-item-label>
           <q-item-label class="gray1 text-subtitle1">Migliora la tua impronta ecologica</q-item-label>
         </q-item-section>
       </q-item>
@@ -25,7 +25,7 @@
         <q-item>
           <q-btn rounded @click="$router.push({ path: '/events' })">
             <q-item-section class="text-left">
-              <q-item-label class="text-h4 text-weight-bold">E<span class="text-lowercase">vents</span></q-item-label>
+              <q-item-label class="text-h4 text-weight-bold">E<span class="text-lowercase">venti</span></q-item-label>
               <q-item-label class="text-caption">A<span class="text-lowercase">derisci alle iniziative e dai il tuo contributo!</span></q-item-label>
             </q-item-section>
             <q-item-section avatar>

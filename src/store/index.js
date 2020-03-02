@@ -4,6 +4,7 @@ import aria from './modules/aria'
 import conf from './modules/conf'
 import db from './modules/db'
 import azioni from './modules/azioni'
+import eventi from './modules/eventi'
 
 Vue.use(Vuex)
 
@@ -21,7 +22,8 @@ export default new Vuex.Store({
     aria,
     conf,
     db,
-    azioni
+    azioni,
+    eventi
   },
 
   // enable strict mode (adds overhead!)

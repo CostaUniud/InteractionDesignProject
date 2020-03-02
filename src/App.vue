@@ -28,7 +28,24 @@ export default {
   async beforeMount () {
     window.screen.orientation.lock('portrait')
 
+    let evento = {
+      nome: 'Giornata del riciclo',
+      descrizione: 'Lo smaltimento dei rifiuti speciali. Scopri come diminuire l\'impatto ambientale.',
+      luogo: 'Piazza Cavour',
+      img: null
+    }
+
+    var that = this
+
     await this.startDb()
+      .then(res => {
+        setTimeout(function () {
+          that.salvaEvento(evento)
+        }, 1000)
+      })
+      .catch(error => {
+        console.log('startDb > error', error)
+      })
   },
   mounted () {
     cordova.plugins.backgroundMode.on('activate', function () {
@@ -51,7 +68,8 @@ export default {
       'setScan': 'conf/setScan'
     }),
     ...mapActions({
-      'startDb': 'db/start'
+      'startDb': 'db/start',
+      'salvaEvento': 'eventi/salvaEvento'
     }),
     turnOnLight () {
       if (!this.light) {
