@@ -1,6 +1,6 @@
 <template>
   <div class="small">
-    <bar-chart :chart-data="datacollection"></bar-chart>
+    <bar-chart :chart-data="datacollection" :options="chartOptions"></bar-chart>
   </div>
 </template>
 
@@ -15,7 +15,14 @@ export default {
   data () {
     return {
       datacollection: {},
-      arrayData: []
+      arrayData: [],
+      chartOptions: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Qualità dell\'aria'
+        }
+      }
     }
   },
   mounted () {
@@ -26,34 +33,15 @@ export default {
       'datiAria': 'aria/getAria'
     })
   },
-  watch: {
-    datiAria: function () {
-      this.arrayData.push(parseInt(this.datiAria))
-      if (this.arrayData.length === 10) {
-        this.arrayData.shift()
-      }
-      this.fillData()
-    }
-  },
   methods: {
     fillData () {
       this.datacollection = {
-        labels: ['CO'],
+        labels: ['PM2.5', 'PM10', 'CO', 'NO2', 'NH3'],
         datasets: [
           {
-            // barPercentage: 0.5,
-            // barThickness: 6,
-            // maxBarThickness: 8,
-            // minBarLength: 2,
-            label: 'CO',
-            backgroundColor: '#FF7E79',
-            data: this.arrayData
+            backgroundColor: ['#FF7E79', '#F2C94C', '#F2994A', '#2B86DB', '#319B62'],
+            data: [55, 68, 40, 34, 58] // parseInt(this.datiAria)
           }
-          // {
-          //   label: 'PM10',
-          //   backgroundColor: '#1AACFE',
-          //   data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
-          // }
         ]
       }
     }

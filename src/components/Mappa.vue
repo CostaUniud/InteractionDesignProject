@@ -27,7 +27,9 @@
     </div>
     <div id="map" class="map"></div>
 
-    <q-btn round class="btn-map" color="green" icon="gps_not_fixed" @click="centerMap"/>
+    <q-btn round class="btn me green bg-white" icon="mdi-crosshairs-gps" @click="centerMe()"/>
+    <q-btn round class="btn home green bg-white" icon="mdi-city-variant-outline" @click="centerHome()"/>
+    <q-btn round class="btn layer green bg-white" icon="mdi-layers-outline" @click="openLayer()"/>
   </div>
 </template>
 
@@ -37,27 +39,39 @@ export default {
   data () {
     return {
       message: null,
-      zoom: 13,
-      center: [12.68, 45.95],
+      zoom: 14.624,
+      center: [12.668, 45.955],
       rotation: 0,
       geolocPosition: null
     }
   },
   methods: {
-    centerMap () {
-      this.center = [12.68, 45.95]
-      this.zoom = 13
+    centerHome () {
+      this.center = [12.668, 45.955]
+      this.zoom = 14.624
       this.rotation = 0
+    },
+    centerMe () {
+      this.center = this.geolocPosition
+      this.zoom = 14
+      this.rotation = 0
+    },
+    openLayer () {
     }
   }
 }
 </script>
 
 <style lang="sass" scoped>
-.btn-map
-  width: 50px
-  height: 50px
-  bottom: 30px
-  right: 30px
+.btn
+  width: 60px
+  height: 60px
+  right: 20px
   position: absolute
+.me
+  bottom: 30px
+.home
+  bottom: 105px
+.layer
+  bottom: 180px
 </style>

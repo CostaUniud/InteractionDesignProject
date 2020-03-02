@@ -358,12 +358,12 @@ export function getCoinAria () {
 }
 
 export function setFirstTime (value) {
-  console.log('setFirstTime', value)
+  // console.log('setFirstTime', value)
   LocalStorage.set('_first', value)
 }
 
 export function getFirstTime () {
-  console.log('getFirstTime', LocalStorage.getItem('_first'))
+  // console.log('getFirstTime', LocalStorage.getItem('_first'))
   return LocalStorage.getItem('_first')
 }
 
