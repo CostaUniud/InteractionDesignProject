@@ -19,7 +19,7 @@
       "build": {
         "cordova": {
           "iconHash": "ce80ccb2361d5609d663134da4956ad2",
-          "splashscreenHash": "0045f547666d3c2b20abb8dcd6d32bc6",
+          "splashscreenHash": "d0e6362ce0659bb1c98428d27143ee71",
           "splashscreenType": "pure",
           "backgroundColor": "#000074"
         }

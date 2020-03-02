@@ -279,7 +279,7 @@ export default {
       this.setFotoProfilo(null)
       logout()
       this.cancellaAzioni()
-      this.$router.push({ path: '/intro' })
+      this.$router.push({ path: '/login' })
     }
   }
 }

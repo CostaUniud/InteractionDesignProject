@@ -7,14 +7,14 @@ const state = {
 
 const getters = {
   getEventi (state) {
-    console.log('getEventi', state.eventi)
+    // console.log('getEventi', state.eventi)
     return state.eventi
   }
 }
 
 const mutations = {
   setEventi (state, payload) {
-    console.log('setEventi', payload)
+    // console.log('setEventi', payload)
     state.eventi = payload
   }
 }
@@ -24,8 +24,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       store.dispatch('db/open')
         .then(db => {
-          console.log(payload)
           db.transaction(function (tx) {
+            tx.executeSql('DELETE FROM evento', [])
             tx.executeSql(
               `CREATE TABLE IF NOT EXISTS evento(
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -57,7 +57,7 @@ const actions = {
           }, function (error) {
             reject(error)
           }, function () {
-            console.log('salvaEvento > ok')
+            // console.log('salvaEvento > ok')
           })
         })
         .catch(error => {

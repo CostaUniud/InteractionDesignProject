@@ -29,7 +29,12 @@
               <q-item :key="index">
                 <q-card class="evento">
                   <q-card-section class="q-pa-none">
-                    <q-img src="@/assets/recycle_event.jpg" class="img">
+                    <q-img v-if="item.img" :src="'data:image/png;base64,' + item.img" class="img">
+                      <div class="absolute-bottom text-h6 text-center text-weight-bold">
+                        {{ item.nome }}
+                      </div>
+                    </q-img>
+                    <q-img v-else src="@/assets/recycle_event.jpg" class="img">
                       <div class="absolute-bottom text-h6 text-center text-weight-bold">
                         {{ item.nome }}
                       </div>
@@ -42,10 +47,12 @@
                   <q-separator />
 
                   <q-card-actions class="gray1">
-                    <q-btn flat round icon="event" color="red"/>
-                    <q-item-label flat class="blue">
-                      {{ item.data }}, {{ item.luogo }}
-                    </q-item-label>
+                    <q-item-section>
+                      <q-item-label flat class="blue q-pl-sm">
+                        {{ item.data }}, {{ item.luogo }}
+                      </q-item-label>
+                    </q-item-section>
+                    <q-btn round icon="event" color="green" @click="salvaEventoCalendario(item)"/>
                   </q-card-actions>
                 </q-card>
               </q-item>
@@ -73,7 +80,7 @@ export default {
     // Refresh lista eventi
     await this.ottieniEventi()
       .then(res => {
-        console.log(res)
+        // console.log(res)
       })
       .catch(error => {
         console.log('ottieniEventi > error', error)
@@ -87,7 +94,39 @@ export default {
   methods: {
     ...mapActions({
       'ottieniEventi': 'eventi/ottieniEventi'
-    })
+    }),
+    salvaEventoCalendario (item) {
+      var that = this
+
+      let dataInizio = new Date()
+      let dataFine = new Date()
+
+      window.plugins.calendar.createEvent(item.nome, item.luogo, item.descrizione, dataInizio, dataFine,
+        function (success) {
+          // console.log('Success:', JSON.stringify(success))
+          that.salvato = true
+          that.$store.commit('conf/dialog', {
+            visible: true,
+            icon: 'mdi-calendar-check',
+            color: 'blue',
+            textColor: 'white',
+            class: 'text-body1 gray1',
+            label: 'L\'evento "' + item.nome + '" è stato aggiunto al tuo calendario!',
+            actions: [
+              {
+                label: 'Chiudi',
+                color: 'green',
+                action: () => {
+                  that.$store.commit('conf/dialog', {})
+                }
+              }
+            ]
+          })
+        },
+        function (error) {
+          console.log('Error:', error)
+        })
+    }
   }
 }
 </script>
