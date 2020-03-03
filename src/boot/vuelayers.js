@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Map, TileLayer, OsmSource, Geoloc, Feature, PointGeom, StyleBox, IconStyle, CircleStyle, FillStyle, StrokeStyle, CircleGeom } from 'vuelayers'
+import { Map, TileLayer, OsmSource, Geoloc, Feature, PointGeom, StyleBox, IconStyle, CircleStyle, FillStyle, StrokeStyle, CircleGeom, VectorLayer } from 'vuelayers'
 
 import 'vuelayers/lib/style.css'
 
@@ -15,3 +15,4 @@ Vue.use(CircleStyle)
 Vue.use(FillStyle)
 Vue.use(StrokeStyle)
 Vue.use(CircleGeom)
+Vue.use(VectorLayer)

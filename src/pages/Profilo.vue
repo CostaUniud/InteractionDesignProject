@@ -74,10 +74,10 @@
             </q-card>
           </q-item-section>
         </q-item>
-        <!-- Grafico coin -->
         <q-item style="width: 100vw">
+          <!-- Grafico coin -->
           <q-item-section>
-            <q-card class="border-radius">
+            <q-card class="border-radius" style="width: 60vw">
               <q-card-section class="q-pb-none">
                 <q-item-label class="gray1 text-h5 text-weight-light" style="font-size: 1.3em">VYcoin guadagnati</q-item-label>
               </q-card-section>
@@ -86,6 +86,7 @@
               </q-card-section>
             </q-card>
           </q-item-section>
+          <!-- Btn NFC -->
           <q-item-section side>
             <q-card class="border-radius q-pa-md q-mb-sm">
               <q-btn stack flat dense round color="blue" icon="mdi-cellphone-nfc" @click="nfcRead()" style="height: 80px; width: 20vw">
