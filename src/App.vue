@@ -87,6 +87,8 @@ export default {
   background-color: $gray2
 .gray1
   color: $gray1
+.bg-gray1
+  background-color: $gray1
 .blue
   color: $blue
 .azure

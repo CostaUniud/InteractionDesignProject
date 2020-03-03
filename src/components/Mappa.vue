@@ -15,7 +15,7 @@
           </template>
         </vl-geoloc>
 
-        <vl-layer-vector>
+        <vl-layer-vector v-if="airLayerActive">
           <vl-feature>
             <vl-geom-point :coordinates="pn"></vl-geom-point>
 
@@ -39,22 +39,22 @@
       <q-list>
         <q-item class="menu-item" style="margin-top: 15px">
           <q-item-section>
-            <q-btn flat round class="btn-menu bg-blue" color="white" icon="mdi-weather-windy" @click="openLayer()"/>
+            <q-btn flat round :class="airLayerActive ? 'bg-blue' : 'bg-gray1'" class="btn-menu" color="white" icon="mdi-weather-windy" @click="airLayerActive = !airLayerActive"/>
           </q-item-section>
         </q-item>
         <q-item class="menu-item">
           <q-item-section>
-            <q-btn flat round class="btn-menu bg-green" color="white" icon="mdi-tree" @click="openLayer()"/>
+            <q-btn flat round :class="greenLayerActive ? 'bg-green' : 'bg-gray1'" class="btn-menu" color="white" icon="mdi-tree" @click="greenLayerActive = !greenLayerActive"/>
           </q-item-section>
         </q-item>
         <q-item class="menu-item">
           <q-item-section>
-            <q-btn flat round class="btn-menu bg-red" color="white" icon="mdi-flash" @click="openLayer()"/>
+            <q-btn flat round :class="energyLayerActive ? 'bg-red' : 'bg-gray1'" class="btn-menu" color="white" icon="mdi-flash" @click="energyLayerActive = !energyLayerActive"/>
           </q-item-section>
         </q-item>
         <q-item class="menu-item">
           <q-item-section>
-            <q-btn flat round class="btn-menu bg-yellow" color="white" icon="mdi-recycle" @click="openLayer()"/>
+            <q-btn flat round :class="ecoLayerActive ? 'bg-yellow' : 'bg-gray1'" class="btn-menu" color="white" icon="mdi-recycle" @click="ecoLayerActive = !ecoLayerActive"/>
           </q-item-section>
         </q-item>
       </q-list>
@@ -77,7 +77,11 @@ export default {
       geolocPosition: null,
       click: false,
       pn: [12.66, 45.955],
-      menuOpen: false
+      menuOpen: false,
+      airLayerActive: true,
+      greenLayerActive: false,
+      energyLayerActive: false,
+      ecoLayerActive: false
     }
   },
   computed: {
