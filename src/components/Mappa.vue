@@ -4,7 +4,7 @@
       <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="width: 170vw; height: 79.7vh" class="sfondo">
         <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
-        <vl-geoloc @update:position="geolocPosition = $event">
+        <vl-geoloc @update:position="evento($event)">
           <template slot-scope="geoloc">
             <vl-feature v-if="geoloc.position" id="position-feature">
               <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
@@ -51,12 +51,21 @@ export default {
       this.zoom = 14.624
       this.rotation = 0
     },
-    centerMe () {
-      this.center = this.geolocPosition
-      this.zoom = 14
-      this.rotation = 0
+    async centerMe () {
+      this.$q.loading.show({ message: 'Rilevando posizione...' })
+
+      await this.$on('coord', function performePosition () {
+        this.$q.loading.hide()
+        this.center = [this.geolocPosition[0] + 0.012, this.geolocPosition[1]]
+        this.zoom = 14
+        this.rotation = 0
+      })
     },
     openLayer () {
+    },
+    evento (event) {
+      this.geolocPosition = event
+      this.$emit('coord')
     }
   }
 }

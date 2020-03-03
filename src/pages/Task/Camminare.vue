@@ -69,8 +69,8 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      latitudine: 0,
-      longitudine: 0
+      latitude: 0,
+      longitude: 0
     }
   },
   computed: {
@@ -90,7 +90,7 @@ export default {
       let position = await getCurrentPosition()
 
       this.latitude = Math.round(position.coords.latitude * 100000) / 100000
-      this.longitudine = Math.round(position.coords.longitudine * 100000) / 100000
+      this.longitude = Math.round(position.coords.longitude * 100000) / 100000
 
       this.watchPosition()
     },
@@ -142,9 +142,9 @@ export default {
             // setCoinTask(10 * getDistanzaPercorsaTask())
             // setCoin(getCoin() + getCoinTask() - coinTaskOld)
 
-            if (updatedLatitude !== that.latitudine || updatedLongitude !== that.longitudine) {
-              that.latitudine = updatedLatitude
-              that.longitudine = updatedLongitude
+            if (updatedLatitude !== that.latitude || updatedLongitude !== that.longitude) {
+              that.latitude = updatedLatitude
+              that.longitude = updatedLongitude
 
               if (speed > 4 && speed < 10 && count > 60) {
                 setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))

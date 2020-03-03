@@ -155,10 +155,11 @@ export function nfcRead () {
         label: 'Avvicina il tag NFC al tuo cellulare per leggerlo.',
         actions: [
           {
-            label: 'Chiudi',
+            label: 'Annulla lettura',
             color: 'green',
             action: () => {
               store.commit('conf/dialog', {})
+              window.nfc.removeNdefListener()
             }
           }
         ]
@@ -258,10 +259,11 @@ export function nfcWrite (text) {
           label: 'Avvicina il tag NFC al tuo cellulare per scriverlo.',
           actions: [
             {
-              label: 'Chiudi',
+              label: 'Annulla scrittura',
               color: 'green',
               action: () => {
                 store.commit('conf/dialog', {})
+                window.nfc.removeTagDiscoveredListener()
               }
             }
           ]
