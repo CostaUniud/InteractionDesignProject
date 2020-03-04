@@ -13,7 +13,8 @@
       <q-tab name="dash" label="Dashboard" icon="mdi-chart-bar"/>
     </q-tabs>
     <q-tab-panels v-model="tab" animated class="sfondo">
-      <q-tab-panel name="map" class="q-pa-none">
+      <q-tab-panel name="map" class="q-pa-none" style="height: 79.5vh; overflow: hidden">
+        <!-- <MappaOl/> -->
         <Mappa/>
       </q-tab-panel>
 
@@ -26,6 +27,7 @@
 
 <script>
 import Mappa from '@/components/Mappa'
+// import MappaOl from '@/components/MappaOl'
 import Dashboard from '@/components/Dashboard'
 import { mapGetters, mapMutations } from 'vuex'
 
@@ -37,7 +39,7 @@ export default {
     }
   },
   components: {
-    Mappa, Dashboard
+    Mappa, Dashboard //
   },
   mounted () {
     this.setTab('home')

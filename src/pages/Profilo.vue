@@ -6,7 +6,7 @@
         <q-icon name="mdi-account-box"/>
       </q-btn>
       <q-avatar v-else class="shadow" size="120px" style="margin-top: 12vh;" @click="fotoDialog = true">
-        <img :src="'data:image/png;base64,' + getFotoProfilo">
+        <img :src="'data:image/png;base64,' + getFotoProfilo" style="height: 100%; width: 100%">
       </q-avatar>
     </div>
 

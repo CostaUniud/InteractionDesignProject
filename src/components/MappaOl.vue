@@ -1,38 +1,6 @@
 <template>
   <div>
-    <div>
-      <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 79.5vh" class="sfondo">
-        <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
-
-        <vl-geoloc @update:position="geolocPosition = $event">
-          <template slot-scope="geoloc">
-            <vl-feature v-if="geoloc.position" id="position-feature">
-              <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
-              <vl-style-box>
-                <vl-style-icon :src="marker" :scale="0.3" :anchor="[0.5, 1]"></vl-style-icon>
-              </vl-style-box>
-            </vl-feature>
-          </template>
-        </vl-geoloc>
-
-        <vl-layer-vector v-if="airLayerActive">
-          <vl-feature>
-            <vl-geom-point :coordinates="pn"></vl-geom-point>
-
-            <vl-style-box>
-              <vl-style-circle :radius="40">
-                <vl-style-fill :color="livelloAria()"></vl-style-fill>
-              </vl-style-circle>
-            </vl-style-box>
-          </vl-feature>
-        </vl-layer-vector>
-
-        <vl-layer-tile id="osm">
-          <vl-source-osm></vl-source-osm>
-        </vl-layer-tile>
-      </vl-map>
-    </div>
-    <div id="map" class="map"></div>
+    <div id="map"></div>
 
     <q-btn round class="btn layer green bg-white" icon="mdi-layers-outline" @click="menuOpen = !menuOpen"/>
     <div v-if="menuOpen" class="menu">
@@ -65,26 +33,31 @@
 </template>
 
 <script>
+import Map from 'ol/Map'
+import View from 'ol/View'
+import TileLayer from 'ol/layer/Tile'
+import XYZ from 'ol/source/XYZ'
 import { mapGetters } from 'vuex'
-import marker from '@/assets/marker.png'
 import { getCurrentPosition } from '@/utils/bt.js'
 
 export default {
-  name: 'Mappa',
+  name: 'MappaOl',
   data () {
     return {
-      zoom: 14.624,
-      center: [12.668, 45.955],
+      map: {},
+      zoom: 14.5,
+      center: [12.655040, 45.962650],
+      pn: [12.66, 45.955],
       rotation: 0,
-      geolocPosition: null,
-      pn: [12.668, 45.955],
       menuOpen: false,
       airLayerActive: true,
       greenLayerActive: false,
       energyLayerActive: false,
-      ecoLayerActive: false,
-      marker
+      ecoLayerActive: false
     }
+  },
+  mounted () {
+    this.initMap()
   },
   computed: {
     ...mapGetters({
@@ -92,20 +65,54 @@ export default {
     })
   },
   methods: {
+    initMap () {
+      this.map = new Map({
+        target: 'map',
+        layers: [
+          new TileLayer({
+            source: new XYZ({
+              url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            })
+          })
+        ],
+        view: new View({
+          projection: 'EPSG:4326',
+          center: this.center,
+          zoom: this.zoom
+        })
+      })
+    },
     centerHome () {
-      this.center = [12.668, 45.955]
-      this.zoom = 14.624
-      this.rotation = 0
+      var newView = new View({
+        projection: 'EPSG:4326',
+        center: this.pn,
+        zoom: 14.5
+      })
+      this.map.setView(newView)
     },
     async centerMe () {
       this.$q.loading.show({ message: 'Rilevando posizione...' })
 
+      // var iconStyle = new Style({
+      //   image: new Icon({
+      //     anchor: [0.5, 46],
+      //     anchorXUnits: 'fraction',
+      //     anchorYUnits: 'pixels',
+      //     src: '@/assets/marker.png'
+      //   })
+      // })
+
+      // iconFeature.setStyle(iconStyle)
+
       await getCurrentPosition()
         .then(res => {
           this.$q.loading.hide()
-          this.center = [res.coords.longitude, res.coords.latitude]
-          this.zoom = 14
-          this.rotation = 0
+          var newView = new View({
+            projection: 'EPSG:4326',
+            center: [res.coords.longitude, res.coords.latitude],
+            zoom: 14.5
+          })
+          this.map.setView(newView)
         })
         .catch(error => {
           console.log('getCurrentPosition > error', error)
@@ -125,6 +132,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+#map
+  height: 80vh
 .btn
   width: 60px
   height: 60px

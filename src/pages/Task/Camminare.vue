@@ -26,36 +26,40 @@
         <div class="col-auto q-mt-xl">
           <q-list>
             <q-item class="q-pt-none">
-              <q-item-section class="text-center">
-                <q-item-label class="gray1 text-body1">
+              <q-item-section class="text-center gray1 text-body1">
+                <q-item-label>
                   Hai intenzione di farti una bella camminata? Ottimo!
-                  <br>Premi il pulsante <span class="text-weight-bold">Inizia</span>!
-                  <br>Guadagnerai VYcoin finché continuerai a camminare! In qualsiasi momento premi <span class="text-weight-bold">Stop</span> per terminare il task.
+                  <br>Premi il pulsante <span class="text-weight-bold">Avvia</span>!
+                  <br>Guadagnerai VYcoin finché continuerai a camminare! In qualsiasi momento premi <span class="text-weight-bold">Ferma</span> per terminare il task.
+                </q-item-label>
+                <q-item-label>
                   <br><span class="text-weight-bold">Ricorda:</span> Vyca controllerà che tu stia camminando anche se spegni lo schermo o usi un'altra app, ma se la chiudi non potrà
-                  farlo e non guadagnerai VYcoin!
+                  farlo.
                 </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </div>
-        <q-item>
-          <q-item-section>
-            <q-btn class="bg-green btn inizia text-white" rounded @click="avvia()">
-              <q-item-section class="text-center">
-                <q-item-label class="text-h4 text-weight-bold">I<span class="text-lowercase">nizia</span></q-item-label>
-              </q-item-section>
-            </q-btn>
-          </q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-btn class="bg-white btn" rounded @click="stop()">
-              <q-item-section class="text-center">
-                <q-item-label class="gray1 text-h5">S<span class="text-lowercase">top</span></q-item-label>
-              </q-item-section>
-            </q-btn>
-          </q-item-section>
-        </q-item>
+        <div class="fixed-bottom q-mb-xl">
+          <q-item v-if="btnSwitchStatus">
+            <q-item-section>
+              <q-btn class="bg-green btn inizia text-white" rounded @click="avvia()">
+                <q-item-section class="text-center">
+                  <q-item-label class="text-h4 text-weight-bold">A<span class="text-lowercase">vvia</span></q-item-label>
+                </q-item-section>
+              </q-btn>
+            </q-item-section>
+          </q-item>
+          <q-item v-else>
+            <q-item-section>
+              <q-btn class="bg-white btn" rounded @click="stop()">
+                <q-item-section class="text-center">
+                  <q-item-label class="green text-h5">F<span class="text-lowercase">erma</span></q-item-label>
+                </q-item-section>
+              </q-btn>
+            </q-item-section>
+          </q-item>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -70,7 +74,8 @@ export default {
   data () {
     return {
       latitude: 0,
-      longitude: 0
+      longitude: 0,
+      btnSwitchStatus: true
     }
   },
   computed: {
@@ -108,7 +113,7 @@ export default {
               cordova.plugins.backgroundMode.enable()
 
               that.$q.loading.hide()
-
+              that.btnSwitchStatus = false
               that.$store.commit('conf/dialog', {
                 visible: true,
                 icon: 'mdi-shoe-print',
@@ -174,7 +179,7 @@ export default {
         task: 'walk'
       }
 
-      if (getDistanzaPercorsaTask() !== 0 && getCoinTask() !== 0) {
+      if (Math.round(getDistanzaPercorsaTask() * 100) / 100 !== 0 && Math.round(getCoinTask() * 100) / 100 !== 0) {
         this.$q.loading.show({ message: 'Salvando azione...' })
         setCoinAria(setCoinAria() + getCoinTask())
         await this.salvaAzione(payload)
@@ -228,6 +233,8 @@ export default {
           ]
         })
       }
+
+      this.btnSwitchStatus = true
     }
   }
 }
