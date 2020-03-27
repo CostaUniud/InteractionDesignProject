@@ -16,7 +16,7 @@ const actions = {
       let client = connect('wss://192.168.137.71:8883')
       client.subscribe('air')
       client.on('message', function (topic, message) {
-        console.log(message.toString())
+        // console.log(message.toString())
         context.commit('setAria', message.toString())
         resolve(true)
       })

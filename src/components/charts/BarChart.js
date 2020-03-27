@@ -10,4 +10,14 @@ export default {
     // If you want to pass options please create a local options object
     this.renderChart(this.chartData, this.options)
   }
+  // methods: {
+  //   update () {
+  //     this.$data._chart.update()
+  //   }
+  // }
+  // watch: {
+  //   chartData () {
+  //     this.$data._chart.update()
+  //   }
+  // }
 }

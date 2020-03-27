@@ -50,7 +50,7 @@ export default {
     Azioni
   },
   mounted () {
-    // this.ottieniDatiAria()
+    this.ottieniDatiAria()
     this.tab = this.getTab
   },
   computed: {
