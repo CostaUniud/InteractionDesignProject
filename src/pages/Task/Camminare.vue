@@ -41,7 +41,7 @@
           </q-list>
         </div>
         <div class="fixed-bottom q-mb-xl">
-          <q-item v-if="btnSwitchStatus">
+          <q-item v-if="getBtnWalkStatus">
             <q-item-section>
               <q-btn class="bg-green btn inizia text-white" rounded @click="avvia()">
                 <q-item-section class="text-center">
@@ -67,25 +67,26 @@
 
 <script>
 import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa,
-  getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask, setCoinAria } from '@/utils/bt.js'
+  getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask, getCoinAria, setCoinAria } from '@/utils/bt.js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
       latitude: 0,
-      longitude: 0,
-      btnSwitchStatus: true
+      longitude: 0
     }
   },
   computed: {
     ...mapGetters({
-      'getWatchID': 'conf/getWatchID'
+      'getWatchID': 'conf/getWatchID',
+      'getBtnWalkStatus': 'conf/getBtnWalkStatus'
     })
   },
   methods: {
     ...mapMutations({
-      'setWatchID': 'conf/setWatchID'
+      'setWatchID': 'conf/setWatchID',
+      'setBtnWalkStatus': 'conf/setBtnWalkStatus'
     }),
     ...mapActions({
       'salvaAzione': 'azioni/salvaAzione'
@@ -103,6 +104,7 @@ export default {
       var that = this
       var firstTime = true
       var count = 0
+      var debugMode = true
       setDistanzaPercorsaTask(0)
       setCoinTask(0)
 
@@ -113,7 +115,7 @@ export default {
               cordova.plugins.backgroundMode.enable()
 
               that.$q.loading.hide()
-              that.btnSwitchStatus = false
+              that.setBtnWalkStatus(false)
               that.$store.commit('conf/dialog', {
                 visible: true,
                 icon: 'mdi-shoe-print',
@@ -138,14 +140,17 @@ export default {
             let updatedLatitude = Math.round(position.coords.latitude * 100000) / 100000
             let updatedLongitude = Math.round(position.coords.longitude * 100000) / 100000
             let speed = position.coords.speed * 3.6
-            // let speed = 10
+
             count++
 
-            // setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
-            // setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
-            // let coinTaskOld = getCoinTask()
-            // setCoinTask(10 * getDistanzaPercorsaTask())
-            // setCoin(getCoin() + getCoinTask() - coinTaskOld)
+            if (debugMode) {
+              let speed = 10
+              setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
+              setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
+              let coinTaskOld = getCoinTask()
+              setCoinTask(10 * getDistanzaPercorsaTask())
+              setCoin(getCoin() + getCoinTask() - coinTaskOld)
+            }
 
             if (updatedLatitude !== that.latitude || updatedLongitude !== that.longitude) {
               that.latitude = updatedLatitude
@@ -181,7 +186,9 @@ export default {
 
       if (Math.round(getDistanzaPercorsaTask() * 100) / 100 !== 0 && Math.round(getCoinTask() * 100) / 100 !== 0) {
         this.$q.loading.show({ message: 'Salvando azione...' })
-        setCoinAria(setCoinAria() + getCoinTask())
+
+        setCoinAria(getCoinAria() + getCoinTask())
+
         await this.salvaAzione(payload)
           .then(res => {
             this.$q.loading.hide()
@@ -234,7 +241,7 @@ export default {
         })
       }
 
-      this.btnSwitchStatus = true
+      this.setBtnWalkStatus(true)
     }
   }
 }

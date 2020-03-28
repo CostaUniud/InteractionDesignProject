@@ -23,6 +23,7 @@ export default {
   methods: {
     fillData () {
       if (getCoinAria() !== null) {
+        console.log(getCoinAria())
         let aria = Math.round(getCoinAria() * 100) / 100
         this.datacollection = {
           labels: ['Aria', 'Mobilità', 'Verde', 'Energia'],

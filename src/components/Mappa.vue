@@ -113,11 +113,15 @@ export default {
     },
     livelloAria () {
       let colore
-      if (this.datiAria > 90) {
+      console.log(this.datiAria)
+      if (this.datiAria > 80) {
         colore = 'rgba(255, 126, 219, 0.3)'
+      } else if (this.datiAria > 60) {
+        colore = 'rgba(242, 201, 76, 0.3)'
       } else {
         colore = 'rgba(43, 143, 219, 0.3)'
       }
+
       return colore
     }
   }

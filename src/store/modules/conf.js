@@ -3,7 +3,8 @@ const state = {
   watchID: '',
   foto: null,
   dialog: {},
-  scan: false
+  scan: false,
+  btnWalkStatus: true
 }
 
 const getters = {
@@ -26,6 +27,10 @@ const getters = {
   getScan (state) {
     // console.log('getScan', state.scan)
     return state.scan
+  },
+  getBtnWalkStatus (state) {
+    // console.log('getBtnWalkStatus', state.btnWalkStatus)
+    return state.btnWalkStatus
   }
 }
 
@@ -49,6 +54,10 @@ const mutations = {
   setScan (state, value) {
     // console.log('setScan', value)
     state.scan = value
+  },
+  setBtnWalkStatus (state, value) {
+    // console.log('setBtnWalkStatus', value)
+    state.btnWalkStatus = value
   }
 }
 

@@ -183,6 +183,7 @@ export default {
       'setTab': 'conf/setTab',
       'setFotoProfilo': 'conf/setFotoProfilo',
       'setScan': 'conf/setScan',
+      'setBtnWalkStatus': 'conf/setBtnWalkStatus',
       'dialog': 'conf/dialog'
     }),
     ...mapActions({
@@ -276,6 +277,7 @@ export default {
         })
     },
     myLogout () {
+      this.setBtnWalkStatus(true)
       stopWatchPosition(this.getWatchID)
       this.setFotoProfilo(null)
       logout()
