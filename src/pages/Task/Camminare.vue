@@ -41,7 +41,7 @@
           </q-list>
         </div>
         <div class="fixed-bottom q-mb-xl">
-          <q-item v-if="getBtnWalkStatus">
+          <q-item v-if="!btnStatus">
             <q-item-section>
               <q-btn class="bg-green btn inizia text-white" rounded @click="avvia()">
                 <q-item-section class="text-center">
@@ -67,26 +67,25 @@
 
 <script>
 import { getCurrentPosition, stopWatchPosition, getCoin, setCoin, getDistanzaPercorsa, setDistanzaPercorsa,
-  getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask, getCoinAria, setCoinAria } from '@/utils/bt.js'
+  getNome, getDistanzaPercorsaTask, setDistanzaPercorsaTask, getCoinTask, setCoinTask, getCoinAria, setCoinAria, getBtnWalkStatus, setBtnWalkStatus } from '@/utils/bt.js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
       latitude: 0,
-      longitude: 0
+      longitude: 0,
+      btnStatus: getBtnWalkStatus()
     }
   },
   computed: {
     ...mapGetters({
-      'getWatchID': 'conf/getWatchID',
-      'getBtnWalkStatus': 'conf/getBtnWalkStatus'
+      'getWatchID': 'conf/getWatchID'
     })
   },
   methods: {
     ...mapMutations({
-      'setWatchID': 'conf/setWatchID',
-      'setBtnWalkStatus': 'conf/setBtnWalkStatus'
+      'setWatchID': 'conf/setWatchID'
     }),
     ...mapActions({
       'salvaAzione': 'azioni/salvaAzione'
@@ -115,7 +114,8 @@ export default {
               cordova.plugins.backgroundMode.enable()
 
               that.$q.loading.hide()
-              that.setBtnWalkStatus(false)
+              that.btnStatus = true
+              setBtnWalkStatus(true)
               that.$store.commit('conf/dialog', {
                 visible: true,
                 icon: 'mdi-shoe-print',
@@ -150,18 +150,18 @@ export default {
               let coinTaskOld = getCoinTask()
               setCoinTask(10 * getDistanzaPercorsaTask())
               setCoin(getCoin() + getCoinTask() - coinTaskOld)
-            }
+            } else {
+              if (updatedLatitude !== that.latitude || updatedLongitude !== that.longitude) {
+                that.latitude = updatedLatitude
+                that.longitude = updatedLongitude
 
-            if (updatedLatitude !== that.latitude || updatedLongitude !== that.longitude) {
-              that.latitude = updatedLatitude
-              that.longitude = updatedLongitude
-
-              if (speed > 4 && speed < 10 && count > 60) {
-                setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
-                setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
-                let coinTaskOld = getCoinTask()
-                setCoinTask(10 * getDistanzaPercorsaTask())
-                setCoin(getCoin() + getCoinTask() - coinTaskOld)
+                if (speed > 4 && speed < 10 && count > 60) {
+                  setDistanzaPercorsaTask(getDistanzaPercorsaTask() + (speed * (1 / 3600)))
+                  setDistanzaPercorsa(getDistanzaPercorsa() + (speed * (1 / 3600)))
+                  let coinTaskOld = getCoinTask()
+                  setCoinTask(10 * getDistanzaPercorsaTask())
+                  setCoin(getCoin() + getCoinTask() - coinTaskOld)
+                }
               }
             }
             resolve(true)
@@ -241,7 +241,8 @@ export default {
         })
       }
 
-      this.setBtnWalkStatus(true)
+      this.btnStatus = false
+      setBtnWalkStatus(false)
     }
   }
 }

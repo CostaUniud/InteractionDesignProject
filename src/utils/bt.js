@@ -369,6 +369,16 @@ export function getFirstTime () {
   return LocalStorage.getItem('_first')
 }
 
+export function setBtnWalkStatus (value) {
+  // console.log('setBtnWalkStatus', value)
+  LocalStorage.set('_btnWalkStatus', value)
+}
+
+export function getBtnWalkStatus () {
+  // console.log('getBtnWalkStatus', LocalStorage.getItem('_btnWalkStatus'))
+  return LocalStorage.getItem('_btnWalkStatus')
+}
+
 export function logout () {
   // removeLogin()
   stopWatchPosition()

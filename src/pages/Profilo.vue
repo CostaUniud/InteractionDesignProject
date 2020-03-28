@@ -141,7 +141,7 @@
           </q-item>
           <q-item>
             <q-item-section>
-              <q-btn color="red" label="Scrivi NFC" @click="scriviNfc()"/>
+              <q-btn color="red" label="Avanti" @click="scriviNfc()"/>
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64, getFoto, setFoto, nfcRead, nfcWrite } from '@/utils/bt.js'
+import { getCameraImage, logout, stopWatchPosition, getNome, getCoin, getDistanzaPercorsa, arrayBufferToBase64, getFoto, setFoto, nfcRead, nfcWrite, setBtnWalkStatus } from '@/utils/bt.js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import Coin from '@/components/charts/Coin'
 
@@ -183,7 +183,6 @@ export default {
       'setTab': 'conf/setTab',
       'setFotoProfilo': 'conf/setFotoProfilo',
       'setScan': 'conf/setScan',
-      'setBtnWalkStatus': 'conf/setBtnWalkStatus',
       'dialog': 'conf/dialog'
     }),
     ...mapActions({
@@ -277,7 +276,7 @@ export default {
         })
     },
     myLogout () {
-      this.setBtnWalkStatus(true)
+      setBtnWalkStatus(false)
       stopWatchPosition(this.getWatchID)
       this.setFotoProfilo(null)
       logout()
