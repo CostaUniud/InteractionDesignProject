@@ -49,14 +49,15 @@ export default {
     Profilo,
     Azioni
   },
-  mounted () {
-    this.ottieniDatiAria()
+  async mounted () {
     this.tab = this.getTab
+    await this.ottieniDatiAria()
   },
   computed: {
     ...mapGetters({
       'getTab': 'conf/getTab',
-      'getScan': 'conf/getScan'
+      'getScan': 'conf/getScan',
+      'datiAria': 'aria/getAria'
     })
   },
   methods: {

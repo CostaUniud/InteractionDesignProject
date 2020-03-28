@@ -1,6 +1,6 @@
 <template>
   <div class="small">
-    <bar-chart v-if="loaded" ref="barChart" :chart-data="datacollection" :options="chartOptions"></bar-chart>
+    <bar-chart ref="barChart" :chart-data="datacollection" :options="chartOptions"></bar-chart>
   </div>
 </template>
 
@@ -23,9 +23,11 @@ export default {
           display: true,
           text: 'Qualità dell\'aria'
         }
-      },
-      loaded: false
+      }
     }
+  },
+  created () {
+    this.fillData(0)
   },
   mounted () {
     this.fetch()
@@ -42,7 +44,6 @@ export default {
     fillData (co) {
       // await this.ottieniDatiAria()
       //   .then(response => {
-      this.loaded = true
       this.datacollection = {
         labels: ['PM2.5', 'PM10', 'CO', 'NO2', 'NH3'],
         datasets: [

@@ -2,7 +2,7 @@
   <div v-if="!getScan" class="column">
     <!-- Foto profilo -->
     <div class="flex bg-green justify-center trasparente" style="height: 20vh">
-      <q-btn v-if="!getFotoProfilo" :ripple="false" round color="blue" size="40px" @click="fotoDialog = true" style="margin-top: 12vh">
+      <q-btn v-if="!getFotoProfilo" :ripple="false" round color="red" size="40px" @click="fotoDialog = true" style="margin-top: 12vh">
         <q-icon name="mdi-account-box"/>
       </q-btn>
       <q-avatar v-else class="shadow" size="120px" style="margin-top: 12vh;" @click="fotoDialog = true">
