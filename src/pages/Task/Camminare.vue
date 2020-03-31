@@ -103,7 +103,7 @@ export default {
       var that = this
       var firstTime = true
       var count = 0
-      var debugMode = true
+      var debugMode = false
       setDistanzaPercorsaTask(0)
       setCoinTask(0)
 
